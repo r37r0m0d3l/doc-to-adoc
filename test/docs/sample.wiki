@@ -1,0 +1,338 @@
+<span id="_document_metadata_&_attributes"></span>
+= Document Metadata &amp; Attributes =
+
+This document tests the extraction and rendering capabilities of AsciiDoc converters in Node.js.
+
+* Author: John Doe
+* Revision: 2.4.0
+* Custom Attribute Resolution: AsciiDoc Attribute Value
+* Current Date Attribute: {docdate}
+
+<span id="_text_formatting_&_inline_elements"></span>
+= Text Formatting &amp; Inline Elements =
+
+<span id="_basic_styles"></span>
+== Basic Styles ==
+
+* '''Bold Text''' ('''<code>Bold</code> <code>Text</code>''')
+* ''Italic Text'' (''<code>Italic</code> <code>Text</code>'')
+* <code>Monospaced</code> <code>Code</code> (<code>Monospaced</code> <code>Code</code>)
+* '''<code>Bold</code> <code>Monospaced</code>''' (`*<code>Bold</code> <code>Monospaced</code>*`)
+* ''<code>Italic</code> <code>Monospaced</code>'' (`_<code>Italic</code> <code>Monospaced</code>_`)
+
+<span id="_advanced_inline_formatting"></span>
+== Advanced Inline Formatting ==
+
+* <span class="underline">Underlined Text</span> (<span class="underline"><code>Underlined</code> <code>Text</code></span>)
+* <span class="line-through">Strikethrough Text</span> (<span class="line-through"><code>Strikethrough</code> <code>Text</code></span>)
+* <span class="mark">Highlighted Text</span> (<span class="mark"><code>Highlighted</code> <code>Text</code></span>)
+* Superscript: E = mc<sup>2</sup> (<code>E</code> <code>=</code> <code>mc</code><sup><code>2</code></sup>)
+* Subscript: H<sub>2</sub>O (<code>H</code><sub><code>2</code></sub><code>O</code>)
+* Smart symbols: © ® ™ — → ← ⇒ ⇐
+
+<span id="_ui_macros_(requires_:experimental:)"></span>
+== UI Macros (Requires <code>:experimental:</code>) ==
+
+* Keyboard shortcuts: <span class="kbd">'''Ctrl'''</span>+<span class="kbd">'''Alt'''</span>+<span class="kbd">'''T'''</span>, <span class="kbd">'''Cmd'''</span>+<span class="kbd">'''Shift'''</span>+<span class="kbd">'''P'''</span>
+* Menu selections: <span class="menu">'''File › New Project... › TypeScript'''</span>
+* Button references: Press the <span class="button">'''[Save Changes]'''</span> button to proceed.
+
+<span id="_lists_&_text_structures"></span>
+= Lists &amp; Text Structures =
+
+<span id="_unordered_list_(nested)"></span>
+== Unordered List (Nested) ==
+
+* First level item A
+** Second level item A1
+*** Third level item A1a
+*** Third level item A1b
+** Second level item A2
+* First level item B
+
+<span id="_ordered_list_(custom_numbering)"></span>
+== Ordered List (Custom Numbering) ==
+
+# Step One: Parse Document
+## Sub-step A: Tokenize Input
+## Sub-step B: Build AST
+# Step Two: Render HTML
+# Step Three: Output Result
+
+<span id="_checklist_(task_list)"></span>
+== Checklist (Task List) ==
+
+* ☒ Implement AST Parser
+* ☒ Support basic text formatting
+* ☐ Support complex tables
+* ☐ Implement macro extensions
+
+<span id="_description_list_(glossary)"></span>
+== Description List (Glossary) ==
+
+; Node.js
+: A JavaScript runtime built on Chrome’s V8 JavaScript engine.
+; AsciiDoc
+: A human-readable document format for writing technical documentation.
+; AST
+: Abstract Syntax Tree, a tree representation for the abstract syntactic structure of source code.
+
+<span id="_admonitions_(callout_boxes)"></span>
+= Admonitions (Callout Boxes) =
+
+<div class="note">
+<div class="title">
+Note
+
+</div>
+
+This is a standard NOTE admonition block used for general information.
+
+</div>
+
+<div class="tip">
+<div class="title">
+Tip
+
+</div>
+
+Pro tip! You can customize admonition icons using CSS or font icons.
+
+</div>
+
+<div class="important">
+<div class="title">
+Important
+
+</div>
+
+Pay attention to edge cases when parsing nested inline markup.
+
+</div>
+
+<div class="warning">
+<div class="title">
+Warning
+
+</div>
+
+Ensure that user-generated AsciiDoc input is sanitized before rendering raw HTML.
+
+</div>
+
+<div class="caution">
+<div class="title">
+Caution
+
+</div>
+
+Destructive operations cannot be undone without a backup.
+
+</div>
+
+<span id="_multiline_admonition_block"></span>
+== Multiline Admonition Block ==
+
+<div class="warning">
+<div class="title">
+Warning
+
+</div>
+
+This is a multiline admonition block.
+
+It can contain multiple paragraphs, lists, and code snippets:
+
+* Multi-line item 1
+* Multi-line item 2
+
+<syntaxhighlight lang="javascript">console.log("Warning from inside block!");</syntaxhighlight>
+</div>
+
+<span id="_code_blocks_callouts"></span>
+= Code Blocks &amp; Callouts =
+
+<span id="_standard_code_block_with_syntax_highlighting"></span>
+== Standard Code Block with Syntax Highlighting ==
+
+<syntaxhighlight lang="typescript">import { parseAsciiDoc } from 'adoc-converter';
+
+interface ParseOptions {
+  standalone?: boolean;
+  safeMode?: 'unsafe' | 'safe' | 'server' | 'secure';
+}
+
+export async function processFile(filePath: string, options: ParseOptions = {}): Promise<string> {
+  console.log(`Processing file: ${filePath}`);
+  return parseAsciiDoc(filePath, options);
+}</syntaxhighlight>
+<span id="_code_block_with_callouts"></span>
+== Code Block with Callouts ==
+
+<syntaxhighlight lang="javascript">const fs = require('fs');
+const adoc = require('adoc-converter'); // ①
+
+const content = fs.readFileSync('doc.adoc', 'utf8'); // ②
+const html = adoc.convert(content); // ③
+
+console.log(html); // ④</syntaxhighlight>
+<div class="callout-list">
+# Import the Node.js AsciiDoc converter module.
+# Read the raw <code>.adoc</code> source file from the disk.
+# Convert the AsciiDoc string into an HTML string.
+# Print the rendered output to stdout.
+
+</div>
+
+<span id="_tables"></span>
+= Tables =
+
+<span id="_basic_table_with_headers_and_footers"></span>
+== Basic Table with Headers and Footers ==
+
+{| class="wikitable"
+|-
+! ID
+! Feature Name
+! Support Status
+|-
+| 01
+| Section Headers
+| Fully Supported
+|-
+| 02
+| Inline Styles
+| Fully Supported
+|-
+| 03
+| Complex Tables
+| Experimental
+|-
+! Total
+! 3 Features Tested
+! 100% Coverage
+|}
+
+<span id="_advanced_formatted_table_with_alignment_&_column_spans"></span>
+== Advanced Formatted Table with Alignment &amp; Column Spans ==
+
+{| class="wikitable"
+|-
+! Name
+! Type (Header Col)
+! style="text-align: center;"| Center Aligned
+! style="text-align: right;"| Right Aligned
+|-
+| <code>id</code>
+| String
+| style="text-align: center;"| <code>usr_123</code>
+| style="text-align: right;"| $19.99
+|-
+| colspan="2"| Combined Span (2 Columns)
+| style="text-align: center;"|
+| style="text-align: right;"| $49.99
+|-
+| Rowspan (2 Rows)
+| Number
+| style="text-align: center;"| <code>42</code>
+| style="text-align: right;"| $100.00
+|-
+! Number
+! <code>84</code>
+! style="text-align: center;"| $200.00
+! style="text-align: right;"|
+|}
+
+<span id="_table_with_asciidoc_content_inside_cells_(a_specifier)"></span>
+== Table with AsciiDoc Content inside Cells (<code>a</code> specifier) ==
+
+{| class="wikitable"
+|-
+! Component
+! Description &amp; AsciiDoc Elements
+|-
+| Parser
+| * Supports tokenization
+* Handles AST building
+
+<syntaxhighlight lang="json">{ "status": "ok", "code": 200 }</syntaxhighlight>
+|-
+! Renderer
+! <div class="note">
+<div class="title">
+Note
+
+</div>
+
+Generates semantic HTML5 markup.
+
+</div>
+|}
+
+<span id="_sidebars,_quotes_&_example_blocks"></span>
+= Sidebars, Quotes &amp; Example Blocks =
+
+<span id="_quote_block"></span>
+== Quote Block ==
+
+<blockquote>Logic will get you from A to B. Imagination will take you everywhere.
+
+— Albert Einstein, Speech in London (1931)
+</blockquote>
+<span id="_example_block"></span>
+== Example Block ==
+
+<div class="example">
+<div class="title">
+Example Block Title
+
+</div>
+
+This is an example block that demonstrates how sample output or scenarios can be framed.
+
+</div>
+
+<span id="_sidebar_block"></span>
+== Sidebar Block ==
+
+<div class="sidebar">
+<div class="title">
+Technical Notes
+
+</div>
+
+Sidebars are used to visually isolate related or background information from the main flow of text.
+
+</div>
+
+<span id="_anchors,_cross_references_&_footnotes"></span>
+= Anchors, Cross-References &amp; Footnotes =
+
+You can create explicit anchors like <span id="target-section"></span> or link to existing sections like [[#_code_blocks_callouts|the Code Blocks Section]].
+
+Here is a sentence with an inline footnote <ref>This is the text of the footnote rendered at the bottom of the document or section.</ref>.
+
+And another reference to a second footnote <ref>Footnotes can also have explicit identifiers for reusability.</ref>.
+
+<span id="_open_&_literal_blocks"></span>
+= Open &amp; Literal Blocks =
+
+<div>
+<div class="title">
+Literal Block (Preformatted text)
+
+</div>
+
+<pre>  _   _           _          _ ____
+ | \ | |00000000 | |        | / ___|
+ |  \| |/ _ \ / _` | | / \ | \___  | |\  | (_) | (_| | |/ ___ \|___) |
+ |_| \_|\___/ \__,_|_/_/   \_\____/
+</pre>
+</div>
+
+<span id="_abstract_block"></span>
+= Abstract Block =
+
+This document serves as an exhaustive test fixture for evaluating AsciiDoc converters written for or compiled to Node.js (such as <code>@asciidoctor/core</code>, <code>asciidoctor.js</code>, or custom AST-based parsers).
+
+<references />

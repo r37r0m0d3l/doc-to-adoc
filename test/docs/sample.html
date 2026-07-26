@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+	<title>AsciiDoc Comprehensive Feature Test Suite</title>
+	<meta name="generator" content="LibreOffice 26.2.4.2 (Windows)"/>
+	<meta name="author" content="John Doe (john.doe@example.com)"/>
+	<meta name="created" content="2026-07-27T09:35:00"/>
+	<meta name="changed" content="2026-07-27T09:35:00"/>
+	<meta name="AppVersion" content="12.0000"/>
+	<meta name="attribute-test" content="AsciiDoc Attribute Value"/>
+	<meta name="date" content="2023-04-05"/>
+	<meta name="experimental" content="True"/>
+	<meta name="icons" content="font"/>
+	<meta name="numbered" content="True"/>
+	<meta name="source-highlighter" content="highlight.js"/>
+	<meta name="toc" content="left"/>
+	<meta name="toclevels" content="4"/>
+	<meta name="version" content="2.4.0"/>
+	<meta name="sdfootnote" content=";;;;C">
+	<style type="text/css">
+		@page { size: 21.59cm 27.94cm; margin: 2.54cm }
+		p { text-align: left; orphans: 2; margin-top: 0.32cm; margin-bottom: 0.32cm; widows: 2; direction: ltr; background: transparent }
+		p.compact { margin-top: 0.06cm; margin-bottom: 0.06cm }
+		h1 { orphans: 2; color: #0f4761; text-align: left; page-break-inside: avoid; widows: 2; margin-top: 0.64cm; margin-bottom: 0.14cm; direction: ltr; background: transparent; page-break-after: avoid }
+		h1.western { font-family: "Aptos Display", serif; font-size: 20pt }
+		h1.cjk { font-size: 20pt; font-family:  }
+		h1.ctl { font-family: ; font-size: 20pt }
+		h2 { orphans: 2; color: #0f4761; text-align: left; page-break-inside: avoid; widows: 2; margin-top: 0.28cm; margin-bottom: 0.14cm; direction: ltr; background: transparent; page-break-after: avoid }
+		h2.western { font-family: "Aptos Display", serif; font-size: 16pt }
+		h2.cjk { font-size: 16pt; font-family:  }
+		h2.ctl { font-family: ; font-size: 16pt }
+		p.block-text { margin-top: 0.18cm; margin-bottom: 0.18cm; margin-left: 0.85cm; margin-right: 0.85cm }
+		p.sdfootnote { text-align: left; orphans: 2; margin-top: 0cm; margin-bottom: 0.35cm; widows: 2; direction: ltr; background: transparent }
+		h1.contents-heading { color: #365f91; font-weight: normal; line-height: 108%; margin-top: 0.42cm }
+		a:link { color: #4f81bd }
+		a.sdfootnoteanc { font-size: 57% }
+	</style>
+</head>
+<body lang="en-US" link="#4f81bd" vlink="#800000" dir="ltr"><p align="center" style="line-height: 100%; margin-top: 0cm; margin-bottom: 0.14cm">
+<font face="Aptos Display, serif"><font size="6" style="font-size: 28pt">AsciiDoc
+Comprehensive Feature Test Suite</font></font></p>
+<p align="center" style="line-height: 100%; page-break-inside: avoid; margin-top: 0cm; margin-bottom: 0.14cm; page-break-after: avoid">
+<font face="Aptos Display, serif"><font size="3" style="font-size: 12pt">John
+Doe (<font color="#4f81bd"><a href="mailto:john.doe@example.com">john.doe@example.com</a></font>)</font></font></p>
+<p align="center" style="line-height: 100%; page-break-inside: avoid; margin-top: 0cm; margin-bottom: 0.14cm; page-break-after: avoid">
+<font face="Aptos Display, serif"><font size="3" style="font-size: 12pt">2023-04-05</font></font></p>
+<div id="Table of Contents1" dir="ltr">
+	<div id="TextSection" dir="ltr"><h1 class="contents-heading">Table
+		of Contents</h1>
+	</div>
+	<p style="margin-top: 0cm; margin-bottom: 0.35cm"><br/>
+<br/>
+
+	</p>
+</div>
+<h1 class="western"><a name="Xf8dc6308eb8587aa629c2ec3f873c64fbb1b2f7"></a>
+Document Metadata &amp; Attributes</h1>
+<p class="first-paragraph">This document tests the extraction and
+rendering capabilities of AsciiDoc converters in Node.js.</p>
+<ul>
+	<li><p style="margin-top: 0cm; margin-bottom: 0.35cm">Author: John
+	Doe</p></li>
+	<li><p style="margin-top: 0cm; margin-bottom: 0.35cm">Revision:
+	2.4.0</p></li>
+	<li><p style="margin-top: 0cm; margin-bottom: 0.35cm">Custom
+	Attribute Resolution: AsciiDoc Attribute Value</p></li>
+	<li><p style="margin-top: 0cm; margin-bottom: 0.35cm">Current Date
+	Attribute: {docdate}</p></li>
+</ul>
+<h1 class="western"><a name="X1eac3ac117e050fb8b7688af8f0762f5b92a90b"></a>
+Text Formatting &amp; Inline Elements</h1>
+<h2 class="western"><a name="Xf6d450cd67d6c69e2f38d44c6c20cb710f2db9b"></a>
+Basic Styles</h2>
+<ul>
+	<li><p style="margin-top: 0cm; margin-bottom: 0.35cm"><b>Bold Text</b>
+	(<font face="Consolas, serif"><font size="2" style="font-size: 11pt"><b>Bold</b></font></font><b>
+	</b><font face="Consolas, serif"><font size="2" style="font-size: 11pt"><b>Text</b></font></font>)</p></li>
+	<li><p style="margin-top: 0cm; margin-bottom: 0.35cm"><i>Italic Text</i>
+	(<font face="Consolas, serif"><font size="2" style="font-size: 11pt"><i>Italic</i></font></font><i>
+	</i><font face="Consolas, serif"><font size="2" style="font-size: 11pt"><i>Text</i></font></font>)</p></li>
+	<li><p style="margin-top: 0cm; margin-bottom: 0.35cm"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">Monospaced</font></font>
+	<font face="Consolas, serif"><font size="2" style="font-size: 11pt">Code</font></font>
+	(<font face="Consolas, serif"><font size="2" style="font-size: 11pt">Monospaced</font></font>
+	<font face="Consolas, serif"><font size="2" style="font-size: 11pt">Code</font></font>)</p></li>
+	<li><p style="margin-top: 0cm; margin-bottom: 0.35cm"><font face="Consolas, serif"><font size="2" style="font-size: 11pt"><b>Bold</b></font></font><b>
+	</b><font face="Consolas, serif"><font size="2" style="font-size: 11pt"><b>Monospaced</b></font></font>
+	(`*<font face="Consolas, serif"><font size="2" style="font-size: 11pt">Bold</font></font>
+	<font face="Consolas, serif"><font size="2" style="font-size: 11pt">Monospaced</font></font>*`)</p></li>
+	<li><p style="margin-top: 0cm; margin-bottom: 0.35cm"><font face="Consolas, serif"><font size="2" style="font-size: 11pt"><i>Italic</i></font></font><i>
+	</i><font face="Consolas, serif"><font size="2" style="font-size: 11pt"><i>Monospaced</i></font></font>
+	(`_<font face="Consolas, serif"><font size="2" style="font-size: 11pt">Italic</font></font>
+	<font face="Consolas, serif"><font size="2" style="font-size: 11pt">Monospaced</font></font>_`)</p></li>
+</ul>
+<h2 class="western"><a name="X5cb6b3de1a7c89a1caa231da2623a09dbaf3786"></a>
+Advanced Inline Formatting</h2>
+<ul>
+	<li><p style="margin-top: 0cm; margin-bottom: 0.35cm">Underlined
+	Text (<font face="Consolas, serif"><font size="2" style="font-size: 11pt">Underlined</font></font>
+	<font face="Consolas, serif"><font size="2" style="font-size: 11pt">Text</font></font>)</p></li>
+	<li><p style="margin-top: 0cm; margin-bottom: 0.35cm">Strikethrough
+	Text (<font face="Consolas, serif"><font size="2" style="font-size: 11pt">Strikethrough</font></font>
+	<font face="Consolas, serif"><font size="2" style="font-size: 11pt">Text</font></font>)</p></li>
+	<li><p style="margin-top: 0cm; margin-bottom: 0.35cm">Highlighted
+	Text (<font face="Consolas, serif"><font size="2" style="font-size: 11pt">Highlighted</font></font>
+	<font face="Consolas, serif"><font size="2" style="font-size: 11pt">Text</font></font>)</p></li>
+	<li><p style="margin-top: 0cm; margin-bottom: 0.35cm">Superscript: E
+	= mc<sup>2</sup> (<font face="Consolas, serif"><font size="2" style="font-size: 11pt">E</font></font>
+	<font face="Consolas, serif"><font size="2" style="font-size: 11pt">=</font></font>
+	<font face="Consolas, serif"><font size="2" style="font-size: 11pt">mc</font></font><font face="Consolas, serif"><font size="2" style="font-size: 11pt"><sup>2</sup></font></font>)</p></li>
+	<li><p style="margin-top: 0cm; margin-bottom: 0.35cm">Subscript: H<sub>2</sub>O
+	(<font face="Consolas, serif"><font size="2" style="font-size: 11pt">H</font></font><font face="Consolas, serif"><font size="2" style="font-size: 11pt"><sub>2</sub></font></font><font face="Consolas, serif"><font size="2" style="font-size: 11pt">O</font></font>)</p></li>
+	<li><p style="margin-top: 0cm; margin-bottom: 0.35cm">Smart symbols:
+	© ® ™ — → ← ⇒ ⇐</p></li>
+</ul>
+<h2 class="western"><a name="X6b95c37f5369f840c2207805756b7752d822b84"></a>
+UI Macros (Requires <font face="Consolas, serif"><font size="2" style="font-size: 11pt">:experimental:</font></font>)</h2>
+<ul>
+	<li><p style="margin-top: 0cm; margin-bottom: 0.35cm">Keyboard
+	shortcuts: <b>Ctrl</b>+<b>Alt</b>+<b>T</b>, <b>Cmd</b>+<b>Shift</b>+<b>P</b></p></li>
+	<li><p style="margin-top: 0cm; margin-bottom: 0.35cm">Menu
+	selections: <b>File&nbsp;›&nbsp;New Project...&nbsp;›&nbsp;TypeScript</b></p></li>
+	<li><p style="margin-top: 0cm; margin-bottom: 0.35cm">Button
+	references: Press the <b>[Save Changes]</b> button to proceed.</p></li>
+</ul>
+<h1 class="western"><a name="Xcb800f860ac2bf452c22793305ecce07112ef3f"></a>
+Lists &amp; Text Structures</h1>
+<h2 class="western"><a name="Xfd8fe52a94e8bd9e7631bf5bdc2c4fb6504a279"></a>
+Unordered List (Nested)</h2>
+<ul>
+	<li><p style="margin-top: 0cm; margin-bottom: 0.35cm">First level
+	item A</p></li>
+</ul>
+<ul>
+	<ul>
+		<li><p style="margin-top: 0cm; margin-bottom: 0.35cm">Second level
+		item A1</p></li>
+	</ul>
+</ul>
+<ul>
+	<ul>
+		<ul>
+			<li><p style="margin-top: 0cm; margin-bottom: 0.35cm">Third level
+			item A1a</p></li>
+			<li><p style="margin-top: 0cm; margin-bottom: 0.35cm">Third level
+			item A1b</p></li>
+		</ul>
+	</ul>
+</ul>
+<ul>
+	<ul>
+		<li><p style="margin-top: 0cm; margin-bottom: 0.35cm">Second level
+		item A2</p></li>
+	</ul>
+</ul>
+<ul>
+	<li><p style="margin-top: 0cm; margin-bottom: 0.35cm">First level
+	item B</p></li>
+</ul>
+<h2 class="western"><a name="X9dd363807940de226afc439445d0782787a4676"></a>
+Ordered List (Custom Numbering)</h2>
+<ol>
+	<li value="1"><p style="margin-top: 0cm; margin-bottom: 0.35cm">Step
+	One: Parse Document</p></li>
+</ol>
+<ol>
+	<ol type="a">
+		<li value="1"><p style="margin-top: 0cm; margin-bottom: 0.35cm">Sub-step
+		A: Tokenize Input</p></li>
+		<li><p style="margin-top: 0cm; margin-bottom: 0.35cm">Sub-step B:
+		Build AST</p></li>
+	</ol>
+</ol>
+<ol start="2">
+	<li><p style="margin-top: 0cm; margin-bottom: 0.35cm">Step Two:
+	Render HTML</p></li>
+	<li><p style="margin-top: 0cm; margin-bottom: 0.35cm">Step Three:
+	Output Result</p></li>
+</ol>
+<h2 class="western"><a name="X42fc378ba197522e1b074ae6762b7ec0162ea9e"></a>
+Checklist (Task List)</h2>
+<ul>
+	<li><p style="margin-top: 0cm; margin-bottom: 0.35cm">Implement AST
+	Parser</p></li>
+</ul>
+<ul>
+	<li><p style="margin-top: 0cm; margin-bottom: 0.35cm">Support basic
+	text formatting</p></li>
+</ul>
+<ul>
+	<li><p style="margin-top: 0cm; margin-bottom: 0.35cm">Support
+	complex tables</p></li>
+</ul>
+<ul>
+	<li><p style="margin-top: 0cm; margin-bottom: 0.35cm">Implement
+	macro extensions</p></li>
+</ul>
+<h2 class="western"><a name="X57104e371e8fe4751d25fbcfd07b01133d2913d"></a>
+Description List (Glossary)</h2>
+<p style="page-break-inside: avoid; margin-top: 0cm; margin-bottom: 0cm; page-break-after: avoid">
+<b>Node.js</b></p>
+<p style="margin-top: 0cm; margin-bottom: 0.35cm">A JavaScript
+runtime built on Chrome’s V8 JavaScript engine.</p>
+<p style="page-break-inside: avoid; margin-top: 0cm; margin-bottom: 0cm; page-break-after: avoid">
+<b>AsciiDoc</b></p>
+<p style="margin-top: 0cm; margin-bottom: 0.35cm">A human-readable
+document format for writing technical documentation.</p>
+<p style="page-break-inside: avoid; margin-top: 0cm; margin-bottom: 0cm; page-break-after: avoid">
+<b>AST</b></p>
+<p style="margin-top: 0cm; margin-bottom: 0.35cm">Abstract Syntax
+Tree, a tree representation for the abstract syntactic structure of
+source code.</p>
+<h1 class="western"><a name="Xc83300f0be8c468e78f51bae80e91cdd574afc4"></a>
+Admonitions (Callout Boxes)</h1>
+<p class="first-paragraph">Note</p>
+<p>This is a standard NOTE admonition block used for general
+information.</p>
+<p>Tip</p>
+<p>Pro tip! You can customize admonition icons using CSS or font
+icons.</p>
+<p>Important</p>
+<p>Pay attention to edge cases when parsing nested inline markup.</p>
+<p>Warning</p>
+<p>Ensure that user-generated AsciiDoc input is sanitized before
+rendering raw HTML.</p>
+<p>Caution</p>
+<p>Destructive operations cannot be undone without a backup.</p>
+<h2 class="western"><a name="Xdb5fd4914c34d7c29d70e8febfc71414fdd10bc"></a>
+Multiline Admonition Block</h2>
+<p class="first-paragraph">Warning</p>
+<p>This is a multiline admonition block.</p>
+<p>It can contain multiple paragraphs, lists, and code snippets:</p>
+<ul>
+	<li><p style="margin-top: 0cm; margin-bottom: 0.35cm">Multi-line
+	item 1</p></li>
+	<li><p style="margin-top: 0cm; margin-bottom: 0.35cm">Multi-line
+	item 2</p></li>
+</ul>
+<p style="margin-top: 0cm; margin-bottom: 0.35cm"><font color="#008000"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">console</font></font></font><font color="#666666"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">.</font></font></font><font color="#06287e"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">log</font></font></font><font face="Consolas, serif"><font size="2" style="font-size: 11pt">(</font></font><font color="#4070a0"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">&quot;Warning
+from inside block!&quot;</font></font></font><font face="Consolas, serif"><font size="2" style="font-size: 11pt">)</font></font><font color="#666666"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">;</font></font></font></p>
+<h1 class="western"><a name="Xe611057f21698f1380825caf8514c0f5e58b1b0"></a>
+Code Blocks &amp; Callouts</h1>
+<h2 class="western"><a name="Xd68593a94d4212c1fe21ed6bcc5c69fda14689b"></a>
+Standard Code Block with Syntax Highlighting</h2>
+<p style="margin-top: 0cm; margin-bottom: 0.35cm"><font color="#008000"><font face="Consolas, serif"><font size="2" style="font-size: 11pt"><b>import</b></font></font></font><font face="Consolas, serif"><font size="2" style="font-size: 11pt">
+{ parseAsciiDoc } </font></font><font color="#008000"><font face="Consolas, serif"><font size="2" style="font-size: 11pt"><b>from</b></font></font></font><font face="Consolas, serif"><font size="2" style="font-size: 11pt">
+</font></font><font color="#4070a0"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">'adoc-converter'</font></font></font><font color="#666666"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">;</font></font></font><br/>
+<br/>
+<font color="#007020"><font face="Consolas, serif"><font size="2" style="font-size: 11pt"><b>interface</b></font></font></font><font face="Consolas, serif"><font size="2" style="font-size: 11pt">
+ParseOptions {</font></font><br/>
+<font face="Consolas, serif"><font size="2" style="font-size: 11pt">
+ standalone</font></font><font color="#666666"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">?:</font></font></font><font face="Consolas, serif"><font size="2" style="font-size: 11pt">
+</font></font><font color="#902000"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">boolean</font></font></font><font color="#666666"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">;</font></font></font><br/>
+<font face="Consolas, serif"><font size="2" style="font-size: 11pt">
+ safeMode</font></font><font color="#666666"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">?:</font></font></font><font face="Consolas, serif"><font size="2" style="font-size: 11pt">
+</font></font><font color="#4070a0"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">'unsafe'</font></font></font><font face="Consolas, serif"><font size="2" style="font-size: 11pt">
+</font></font><font color="#666666"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">|</font></font></font><font face="Consolas, serif"><font size="2" style="font-size: 11pt">
+</font></font><font color="#4070a0"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">'safe'</font></font></font><font face="Consolas, serif"><font size="2" style="font-size: 11pt">
+</font></font><font color="#666666"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">|</font></font></font><font face="Consolas, serif"><font size="2" style="font-size: 11pt">
+</font></font><font color="#4070a0"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">'server'</font></font></font><font face="Consolas, serif"><font size="2" style="font-size: 11pt">
+</font></font><font color="#666666"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">|</font></font></font><font face="Consolas, serif"><font size="2" style="font-size: 11pt">
+</font></font><font color="#4070a0"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">'secure'</font></font></font><font color="#666666"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">;</font></font></font><br/>
+<font face="Consolas, serif"><font size="2" style="font-size: 11pt">}</font></font><br/>
+<br/>
+<font color="#008000"><font face="Consolas, serif"><font size="2" style="font-size: 11pt"><b>export</b></font></font></font><font face="Consolas, serif"><font size="2" style="font-size: 11pt">
+</font></font><font color="#007020"><font face="Consolas, serif"><font size="2" style="font-size: 11pt"><b>async</b></font></font></font><font face="Consolas, serif"><font size="2" style="font-size: 11pt">
+</font></font><font color="#007020"><font face="Consolas, serif"><font size="2" style="font-size: 11pt"><b>function</b></font></font></font><font face="Consolas, serif"><font size="2" style="font-size: 11pt">
+</font></font><font color="#06287e"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">processFile</font></font></font><font face="Consolas, serif"><font size="2" style="font-size: 11pt">(filePath</font></font><font color="#666666"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">:</font></font></font><font face="Consolas, serif"><font size="2" style="font-size: 11pt">
+</font></font><font color="#902000"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">string</font></font></font><font color="#666666"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">,</font></font></font><font face="Consolas, serif"><font size="2" style="font-size: 11pt">
+options</font></font><font color="#666666"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">:</font></font></font><font face="Consolas, serif"><font size="2" style="font-size: 11pt">
+ParseOptions </font></font><font color="#666666"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">=</font></font></font><font face="Consolas, serif"><font size="2" style="font-size: 11pt">
+{})</font></font><font color="#666666"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">:</font></font></font><font face="Consolas, serif"><font size="2" style="font-size: 11pt">
+</font></font><font color="#008000"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">Promise</font></font></font><font color="#666666"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">&lt;</font></font></font><font color="#902000"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">string</font></font></font><font color="#666666"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">&gt;</font></font></font><font face="Consolas, serif"><font size="2" style="font-size: 11pt">
+{</font></font><br/>
+<font face="Consolas, serif"><font size="2" style="font-size: 11pt">
+ </font></font><font color="#008000"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">console</font></font></font><font color="#666666"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">.</font></font></font><font color="#06287e"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">log</font></font></font><font face="Consolas, serif"><font size="2" style="font-size: 11pt">(</font></font><font color="#4070a0"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">`Processing
+file: </font></font></font><font color="#4070a0"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">${</font></font></font><font face="Consolas, serif"><font size="2" style="font-size: 11pt">filePath</font></font><font color="#4070a0"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">}</font></font></font><font color="#4070a0"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">`</font></font></font><font face="Consolas, serif"><font size="2" style="font-size: 11pt">)</font></font><font color="#666666"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">;</font></font></font><br/>
+<font face="Consolas, serif"><font size="2" style="font-size: 11pt">
+ </font></font><font color="#007020"><font face="Consolas, serif"><font size="2" style="font-size: 11pt"><b>return</b></font></font></font><font face="Consolas, serif"><font size="2" style="font-size: 11pt">
+</font></font><font color="#06287e"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">parseAsciiDoc</font></font></font><font face="Consolas, serif"><font size="2" style="font-size: 11pt">(filePath</font></font><font color="#666666"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">,</font></font></font><font face="Consolas, serif"><font size="2" style="font-size: 11pt">
+options)</font></font><font color="#666666"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">;</font></font></font><br/>
+<font face="Consolas, serif"><font size="2" style="font-size: 11pt">}</font></font></p>
+<h2 class="western"><a name="Xad683a4aae4c5ba8b287a32f37346e815f96840"></a>
+Code Block with Callouts</h2>
+<p style="margin-top: 0cm; margin-bottom: 0.35cm"><font color="#007020"><font face="Consolas, serif"><font size="2" style="font-size: 11pt"><b>const</b></font></font></font><font face="Consolas, serif"><font size="2" style="font-size: 11pt">
+fs </font></font><font color="#666666"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">=</font></font></font><font face="Consolas, serif"><font size="2" style="font-size: 11pt">
+</font></font><font color="#bc7a00"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">require</font></font></font><font face="Consolas, serif"><font size="2" style="font-size: 11pt">(</font></font><font color="#4070a0"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">'fs'</font></font></font><font face="Consolas, serif"><font size="2" style="font-size: 11pt">)</font></font><font color="#666666"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">;</font></font></font><br/>
+<font color="#007020"><font face="Consolas, serif"><font size="2" style="font-size: 11pt"><b>const</b></font></font></font><font face="Consolas, serif"><font size="2" style="font-size: 11pt">
+adoc </font></font><font color="#666666"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">=</font></font></font><font face="Consolas, serif"><font size="2" style="font-size: 11pt">
+</font></font><font color="#bc7a00"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">require</font></font></font><font face="Consolas, serif"><font size="2" style="font-size: 11pt">(</font></font><font color="#4070a0"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">'adoc-converter'</font></font></font><font face="Consolas, serif"><font size="2" style="font-size: 11pt">)</font></font><font color="#666666"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">;</font></font></font><font face="Consolas, serif"><font size="2" style="font-size: 11pt">
+</font></font><font color="#60a0b0"><font face="Consolas, serif"><font size="2" style="font-size: 11pt"><i>//
+①</i></font></font></font><br/>
+<br/>
+<font color="#007020"><font face="Consolas, serif"><font size="2" style="font-size: 11pt"><b>const</b></font></font></font><font face="Consolas, serif"><font size="2" style="font-size: 11pt">
+content </font></font><font color="#666666"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">=</font></font></font><font face="Consolas, serif"><font size="2" style="font-size: 11pt">
+fs</font></font><font color="#666666"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">.</font></font></font><font color="#06287e"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">readFileSync</font></font></font><font face="Consolas, serif"><font size="2" style="font-size: 11pt">(</font></font><font color="#4070a0"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">'doc.adoc'</font></font></font><font color="#666666"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">,</font></font></font><font face="Consolas, serif"><font size="2" style="font-size: 11pt">
+</font></font><font color="#4070a0"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">'utf8'</font></font></font><font face="Consolas, serif"><font size="2" style="font-size: 11pt">)</font></font><font color="#666666"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">;</font></font></font><font face="Consolas, serif"><font size="2" style="font-size: 11pt">
+</font></font><font color="#60a0b0"><font face="Consolas, serif"><font size="2" style="font-size: 11pt"><i>//
+②</i></font></font></font><br/>
+<font color="#007020"><font face="Consolas, serif"><font size="2" style="font-size: 11pt"><b>const</b></font></font></font><font face="Consolas, serif"><font size="2" style="font-size: 11pt">
+html </font></font><font color="#666666"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">=</font></font></font><font face="Consolas, serif"><font size="2" style="font-size: 11pt">
+adoc</font></font><font color="#666666"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">.</font></font></font><font color="#06287e"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">convert</font></font></font><font face="Consolas, serif"><font size="2" style="font-size: 11pt">(content)</font></font><font color="#666666"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">;</font></font></font><font face="Consolas, serif"><font size="2" style="font-size: 11pt">
+</font></font><font color="#60a0b0"><font face="Consolas, serif"><font size="2" style="font-size: 11pt"><i>//
+③</i></font></font></font><br/>
+<br/>
+<font color="#008000"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">console</font></font></font><font color="#666666"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">.</font></font></font><font color="#06287e"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">log</font></font></font><font face="Consolas, serif"><font size="2" style="font-size: 11pt">(html)</font></font><font color="#666666"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">;</font></font></font><font face="Consolas, serif"><font size="2" style="font-size: 11pt">
+</font></font><font color="#60a0b0"><font face="Consolas, serif"><font size="2" style="font-size: 11pt"><i>//
+④</i></font></font></font></p>
+<ol>
+	<li value="1"><p style="margin-top: 0cm; margin-bottom: 0.35cm">Import
+	the Node.js AsciiDoc converter module.</p></li>
+	<li><p style="margin-top: 0cm; margin-bottom: 0.35cm">Read the raw
+	<font face="Consolas, serif"><font size="2" style="font-size: 11pt">.adoc</font></font>
+	source file from the disk.</p></li>
+	<li><p style="margin-top: 0cm; margin-bottom: 0.35cm">Convert the
+	AsciiDoc string into an HTML string.</p></li>
+	<li><p style="margin-top: 0cm; margin-bottom: 0.35cm">Print the
+	rendered output to stdout.</p></li>
+</ol>
+<h1 class="western">Tables</h1>
+<h2 class="western">Basic Table with Headers and Footers</h2>
+<table width="100%" cellpadding="7" cellspacing="0">
+	<col width="43*"/>
+	<col width="85*"/>
+	<col width="128*"/>
+	<thead>
+		<tr valign="bottom">
+			<td width="17%" style="border-top: none; border-bottom: 1px solid #000000; border-left: none; border-right: none; padding: 0cm"><p class="first-paragraph" align="left" style="orphans: 2; widows: 2">
+				<font face="Aptos, serif"><font size="3" style="font-size: 12pt">ID</font></font></p>
+			</td>
+			<td width="33%" style="border-top: none; border-bottom: 1px solid #000000; border-left: none; border-right: none; padding: 0cm"><p align="left" style="orphans: 2; widows: 2">
+				<font face="Aptos, serif"><font size="3" style="font-size: 12pt">Feature
+				Name</font></font></p>
+			</td>
+			<td width="50%" style="border-top: none; border-bottom: 1px solid #000000; border-left: none; border-right: none; padding: 0cm"><p align="left" style="orphans: 2; widows: 2">
+				<font face="Aptos, serif"><font size="3" style="font-size: 12pt">Support
+				Status</font></font></p>
+			</td>
+		</tr>
+	</thead>
+	<tbody>
+		<tr valign="top">
+			<td width="17%" style="border: none; padding: 0cm"><p align="left" style="orphans: 2; widows: 2">
+				<font face="Aptos, serif"><font size="3" style="font-size: 12pt">01</font></font></p>
+			</td>
+			<td width="33%" style="border: none; padding: 0cm"><p align="left" style="orphans: 2; widows: 2">
+				<font face="Aptos, serif"><font size="3" style="font-size: 12pt">Section
+				Headers</font></font></p>
+			</td>
+			<td width="50%" style="border: none; padding: 0cm"><p align="left" style="orphans: 2; widows: 2">
+				<font face="Aptos, serif"><font size="3" style="font-size: 12pt">Fully
+				Supported</font></font></p>
+			</td>
+		</tr>
+		<tr valign="top">
+			<td width="17%" style="border: none; padding: 0cm"><p align="left" style="orphans: 2; widows: 2">
+				<font face="Aptos, serif"><font size="3" style="font-size: 12pt">02</font></font></p>
+			</td>
+			<td width="33%" style="border: none; padding: 0cm"><p align="left" style="orphans: 2; widows: 2">
+				<font face="Aptos, serif"><font size="3" style="font-size: 12pt">Inline
+				Styles</font></font></p>
+			</td>
+			<td width="50%" style="border: none; padding: 0cm"><p align="left" style="orphans: 2; widows: 2">
+				<font face="Aptos, serif"><font size="3" style="font-size: 12pt">Fully
+				Supported</font></font></p>
+			</td>
+		</tr>
+		<tr valign="top">
+			<td width="17%" style="border: none; padding: 0cm"><p align="left" style="orphans: 2; widows: 2">
+				<font face="Aptos, serif"><font size="3" style="font-size: 12pt">03</font></font></p>
+			</td>
+			<td width="33%" style="border: none; padding: 0cm"><p align="left" style="orphans: 2; widows: 2">
+				<font face="Aptos, serif"><font size="3" style="font-size: 12pt">Complex
+				Tables</font></font></p>
+			</td>
+			<td width="50%" style="border: none; padding: 0cm"><p align="left" style="orphans: 2; widows: 2">
+				<font face="Aptos, serif"><font size="3" style="font-size: 12pt">Experimental</font></font></p>
+			</td>
+		</tr>
+		<tr valign="top">
+			<td width="17%" style="border: none; padding: 0cm"><p align="left" style="orphans: 2; widows: 2">
+				<font face="Aptos, serif"><font size="3" style="font-size: 12pt">Total</font></font></p>
+			</td>
+			<td width="33%" style="border: none; padding: 0cm"><p align="left" style="orphans: 2; widows: 2">
+				<font face="Aptos, serif"><font size="3" style="font-size: 12pt">3
+				Features Tested</font></font></p>
+			</td>
+			<td width="50%" style="border: none; padding: 0cm"><p align="left" style="orphans: 2; widows: 2"><a name="X47a5f80f0d3a890111b2456daa84def11e89b3d"></a>
+				<font face="Aptos, serif"><font size="3" style="font-size: 12pt">100%
+				Coverage</font></font></p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<h2 class="western">Advanced Formatted Table with Alignment &amp;
+Column Spans</h2>
+<table width="80%" cellpadding="7" cellspacing="0">
+	<col width="64*"/>
+	<col width="64*"/>
+	<col width="64*"/>
+	<col width="64*"/>
+	<thead>
+		<tr valign="bottom">
+			<td width="25%" style="border-top: none; border-bottom: 1px solid #000000; border-left: none; border-right: none; padding: 0cm"><p class="first-paragraph" align="left" style="orphans: 2; widows: 2">
+				<font face="Aptos, serif"><font size="3" style="font-size: 12pt">Name</font></font></p>
+			</td>
+			<td width="25%" style="border-top: none; border-bottom: 1px solid #000000; border-left: none; border-right: none; padding: 0cm"><p align="left" style="orphans: 2; widows: 2">
+				<font face="Aptos, serif"><font size="3" style="font-size: 12pt">Type
+				(Header Col)</font></font></p>
+			</td>
+			<td width="25%" style="border-top: none; border-bottom: 1px solid #000000; border-left: none; border-right: none; padding: 0cm"><p align="center" style="margin-top: 0cm; orphans: 2; widows: 2">
+				<font face="Aptos, serif"><font size="3" style="font-size: 12pt">Center
+				Aligned</font></font></p>
+			</td>
+			<td width="25%" style="border-top: none; border-bottom: 1px solid #000000; border-left: none; border-right: none; padding: 0cm"><p align="right" style="margin-top: 0cm; orphans: 2; widows: 2">
+				<font face="Aptos, serif"><font size="3" style="font-size: 12pt">Right
+				Aligned</font></font></p>
+			</td>
+		</tr>
+	</thead>
+	<tbody>
+		<tr valign="top">
+			<td width="25%" style="border: none; padding: 0cm"><p align="left" style="orphans: 2; widows: 2">
+				<font face="Aptos, serif"><font size="3" style="font-size: 12pt"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">id</font></font></font></font></p>
+			</td>
+			<td width="25%" style="border: none; padding: 0cm"><p align="left" style="orphans: 2; widows: 2">
+				<font face="Aptos, serif"><font size="3" style="font-size: 12pt">String</font></font></p>
+			</td>
+			<td width="25%" style="border: none; padding: 0cm"><p align="center" style="margin-top: 0cm; orphans: 2; widows: 2">
+				<font face="Aptos, serif"><font size="3" style="font-size: 12pt"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">usr_123</font></font></font></font></p>
+			</td>
+			<td width="25%" style="border: none; padding: 0cm"><p align="right" style="margin-top: 0cm; orphans: 2; widows: 2">
+				<font face="Aptos, serif"><font size="3" style="font-size: 12pt">$19.99</font></font></p>
+			</td>
+		</tr>
+		<tr valign="top">
+			<td colspan="2" width="50%" style="border: none; padding: 0cm"><p align="left" style="orphans: 2; widows: 2">
+				<font face="Aptos, serif"><font size="3" style="font-size: 12pt">Combined
+				Span (2 Columns)</font></font></p>
+			</td>
+			<td width="25%" style="border: none; padding: 0cm"><p class="compact" align="left" style="orphans: 2; widows: 2">
+				<br/>
+
+				</p>
+			</td>
+			<td width="25%" style="border: none; padding: 0cm"><p align="right" style="margin-top: 0cm; orphans: 2; widows: 2">
+				<font face="Aptos, serif"><font size="3" style="font-size: 12pt">$49.99</font></font></p>
+			</td>
+		</tr>
+		<tr valign="top">
+			<td width="25%" style="border: none; padding: 0cm"><p align="left" style="orphans: 2; widows: 2">
+				<font face="Aptos, serif"><font size="3" style="font-size: 12pt">Rowspan
+				(2 Rows)</font></font></p>
+			</td>
+			<td width="25%" style="border: none; padding: 0cm"><p align="left" style="orphans: 2; widows: 2">
+				<font face="Aptos, serif"><font size="3" style="font-size: 12pt">Number</font></font></p>
+			</td>
+			<td width="25%" style="border: none; padding: 0cm"><p align="center" style="margin-top: 0cm; orphans: 2; widows: 2">
+				<font face="Aptos, serif"><font size="3" style="font-size: 12pt"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">42</font></font></font></font></p>
+			</td>
+			<td width="25%" style="border: none; padding: 0cm"><p align="right" style="margin-top: 0cm; orphans: 2; widows: 2">
+				<font face="Aptos, serif"><font size="3" style="font-size: 12pt">$100.00</font></font></p>
+			</td>
+		</tr>
+		<tr valign="top">
+			<td width="25%" style="border: none; padding: 0cm"><p align="left" style="orphans: 2; widows: 2">
+				<font face="Aptos, serif"><font size="3" style="font-size: 12pt">Number</font></font></p>
+			</td>
+			<td width="25%" style="border: none; padding: 0cm"><p align="left" style="orphans: 2; widows: 2">
+				<font face="Aptos, serif"><font size="3" style="font-size: 12pt"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">84</font></font></font></font></p>
+			</td>
+			<td width="25%" style="border: none; padding: 0cm"><p align="center" style="margin-top: 0cm; orphans: 2; widows: 2">
+				<font face="Aptos, serif"><font size="3" style="font-size: 12pt">$200.00</font></font></p>
+			</td>
+			<td width="25%" style="border: none; padding: 0cm"><p class="compact" align="left" style="orphans: 2; widows: 2">
+				<br/>
+
+				</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<h2 class="western">Table with AsciiDoc Content inside Cells (<font face="Consolas, serif"><font size="2" style="font-size: 11pt">a</font></font>
+specifier)</h2>
+<table width="100%" cellpadding="7" cellspacing="0">
+	<col width="85*"/>
+	<col width="171*"/>
+	<thead>
+		<tr valign="bottom">
+			<td width="33%" style="border-top: none; border-bottom: 1px solid #000000; border-left: none; border-right: none; padding: 0cm"><p class="first-paragraph" align="left" style="orphans: 2; widows: 2">
+				<font face="Aptos, serif"><font size="3" style="font-size: 12pt">Component</font></font></p>
+			</td>
+			<td width="67%" style="border-top: none; border-bottom: 1px solid #000000; border-left: none; border-right: none; padding: 0cm"><p align="left" style="orphans: 2; widows: 2">
+				<font face="Aptos, serif"><font size="3" style="font-size: 12pt">Description
+				&amp; AsciiDoc Elements</font></font></p>
+			</td>
+		</tr>
+	</thead>
+	<tbody>
+		<tr valign="top">
+			<td width="33%" style="border: none; padding: 0cm"><p align="left" style="orphans: 2; widows: 2">
+				<font face="Aptos, serif"><font size="3" style="font-size: 12pt">Parser</font></font></p>
+			</td>
+			<td width="67%" style="border: none; padding: 0cm">
+				<ul><li><p align="left" style="margin-top: 0cm; margin-bottom: 0.35cm; orphans: 2; widows: 2">
+					<font face="Aptos, serif"><font size="3" style="font-size: 12pt">Supports
+					tokenization</font></font></p></li>
+					<li><p align="left" style="margin-top: 0cm; margin-bottom: 0.35cm; orphans: 2; widows: 2">
+					<font face="Aptos, serif"><font size="3" style="font-size: 12pt">Handles
+					AST building</font></font></p></li>
+				</ul>
+				<p align="left" style="margin-top: 0cm; orphans: 2; widows: 2"><font face="Aptos, serif"><font size="3" style="font-size: 12pt"><font color="#06287e"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">{</font></font></font><font face="Consolas, serif"><font size="2" style="font-size: 11pt">
+				</font></font><font color="#902000"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">&quot;status&quot;</font></font></font><font color="#06287e"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">:</font></font></font><font face="Consolas, serif"><font size="2" style="font-size: 11pt">
+				</font></font><font color="#4070a0"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">&quot;ok&quot;</font></font></font><font color="#06287e"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">,</font></font></font><font face="Consolas, serif"><font size="2" style="font-size: 11pt">
+				</font></font><font color="#902000"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">&quot;code&quot;</font></font></font><font color="#06287e"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">:</font></font></font><font face="Consolas, serif"><font size="2" style="font-size: 11pt">
+				</font></font><font color="#40a070"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">200</font></font></font><font face="Consolas, serif"><font size="2" style="font-size: 11pt">
+				</font></font><font color="#06287e"><font face="Consolas, serif"><font size="2" style="font-size: 11pt">}</font></font></font></font></font></p>
+			</td>
+		</tr>
+		<tr valign="top">
+			<td width="33%" style="border: none; padding: 0cm"><p class="first-paragraph" align="left" style="orphans: 2; widows: 2">
+				<font face="Aptos, serif"><font size="3" style="font-size: 12pt">Renderer</font></font></p>
+			</td>
+			<td width="67%" style="border: none; padding: 0cm"><p align="left" style="orphans: 2; widows: 2">
+				<font face="Aptos, serif"><font size="3" style="font-size: 12pt">Note</font></font></p>
+				<p align="left" style="orphans: 2; widows: 2"><a name="X0689fcf5d26d68966afb4b5e6b34dde861aef1e"></a>
+				<font face="Aptos, serif"><font size="3" style="font-size: 12pt">Generates
+				semantic HTML5 markup.</font></font></p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<h1 class="western">Sidebars, Quotes &amp; Example Blocks</h1>
+<h2 class="western"><a name="X1628a15cf468b81d99e910ce94cf08fde1c4cbd"></a>
+Quote Block</h2>
+<p class="block-text">Logic will get you from A to B. Imagination
+will take you everywhere.</p>
+<p class="block-text">— Albert Einstein, Speech in London (1931)</p>
+<h2 class="western"><a name="X91a703d89b04bc89b3fff25d0933ac54560969c"></a>
+Example Block</h2>
+<p class="first-paragraph">Example Block Title</p>
+<p>This is an example block that demonstrates how sample output or
+scenarios can be framed.</p>
+<h2 class="western"><a name="Xccfb1ede43f1a46fc8e39da15fcca350ae11cda"></a>
+Sidebar Block</h2>
+<p class="first-paragraph">Technical Notes</p>
+<p>Sidebars are used to visually isolate related or background
+information from the main flow of text.</p>
+<h1 class="western"><a name="Xf5288660cb1678cc1111623db4bd5a05ec74743"></a>
+Anchors, Cross-References &amp; Footnotes</h1>
+<p class="first-paragraph"><a name="target-section"></a>You can
+create explicit anchors like  or link to existing sections like <font color="#4f81bd"><a href="#Xe611057f21698f1380825caf8514c0f5e58b1b0">the
+Code Blocks Section</a></font>.</p>
+<p>Here is a sentence with an inline footnote <a class="sdfootnoteanc" name="sdfootnote1anc" href="#sdfootnote1sym"><sup>1</sup></a>.</p>
+<p>And another reference to a second footnote <a class="sdfootnoteanc" name="sdfootnote2anc" href="#sdfootnote2sym"><sup>2</sup></a>.</p>
+<h1 class="western"><a name="X932eeb2b436e14117e000219c1a12661049a5c4"></a>
+Open &amp; Literal Blocks</h1>
+<p class="first-paragraph">Literal Block (Preformatted text)</p>
+<p style="margin-top: 0cm; margin-bottom: 0.35cm">  <font face="Consolas, serif"><font size="2" style="font-size: 11pt">_
+  _           _          _ ____</font></font><br/>
+<font face="Consolas, serif"><font size="2" style="font-size: 11pt">
+| \ | |00000000 | |        | / ___|</font></font><br/>
+<font face="Consolas, serif"><font size="2" style="font-size: 11pt">
+|  \| |/ _ \ / _` | | / \ | \___  | |\  | (_) | (_| | |/ ___ \|___)
+|</font></font><br/>
+<font face="Consolas, serif"><font size="2" style="font-size: 11pt">
+|_| \_|\___/ \__,_|_/_/   \_\____/</font></font></p>
+<h1 class="western"><a name="Xd51a062dd48eef38545e92597cec6174485525c"></a>
+Abstract Block</h1>
+<p class="first-paragraph">This document serves as an exhaustive test
+fixture for evaluating AsciiDoc converters written for or compiled to
+Node.js (such as <font face="Consolas, serif"><font size="2" style="font-size: 11pt">@asciidoctor/core</font></font>,
+<font face="Consolas, serif"><font size="2" style="font-size: 11pt">asciidoctor.js</font></font>,
+or custom AST-based parsers).</p>
+<div id="sdfootnote1"><p class="sdfootnote"><a class="sdfootnotesym" name="sdfootnote1sym" href="#sdfootnote1anc">1</a>
+	This is the text of the footnote rendered at the bottom of the
+	document or section.</p>
+</div>
+<div id="sdfootnote2"><p class="sdfootnote"><a class="sdfootnotesym" name="sdfootnote2sym" href="#sdfootnote2anc">2</a>
+	Footnotes can also have explicit identifiers for reusability.</p>
+</div>
+</body>
+</html>
