@@ -58,6 +58,7 @@
 	},
 	"scripts": {
 		"build": "npm run type-check && npm run lint && npm run build:types && npm run build:js",
+		"build:docs": "npx downdoc README.adoc -o README.md",
 		"build:js": "esbuild src/index.ts --bundle --platform=node --format=esm --target=es2024 --minify --sourcemap --outdir=dist --packages=external && esbuild src/cli.ts --bundle --platform=node --format=esm --target=es2024 --minify --sourcemap --outdir=bin --packages=external",
 		"build:types": "tsc -p tsconfig.build.json",
 		"type-check": "tsc --noEmit",
