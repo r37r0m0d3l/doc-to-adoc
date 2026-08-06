@@ -1,4 +1,4 @@
-== 2adoc 📄➡️📝
+== doc-to-adoc 📄➡️📝
 
 ____
 Universal utility (CLI & Library) to convert 21 document and structured
@@ -27,7 +27,7 @@ Org-mode, ReStructuredText (RST)
 
 [source,javascript]
 ----
-import { convert } from '2adoc';
+import { convert } from 'doc-to-adoc';
 
 const content = await convert({
   input: './my.docx',
@@ -43,7 +43,7 @@ console.log(content);
 [source,bash]
 ----
 # Convert DOCX to AsciiDoc
-2adoc ./my.docx ./my.adoc
+doc-to-adoc ./my.docx ./my.adoc
 ----
 
 ==== Output Types
@@ -57,10 +57,10 @@ through the pipeline `input -++>++ asciidoc -++>++ plain text`.
 [source,bash]
 ----
 # Convert PDF to Markdown
-2adoc -input ./report.pdf -type markdown
+doc-to-adoc -input ./report.pdf -type markdown
 
 # Convert Excel to Plain Text
-2adoc ./data.xlsx ./output.txt -type text
+doc-to-adoc ./data.xlsx ./output.txt -type text
 ----
 
 === 🚀 Local Execution
@@ -80,11 +80,11 @@ npm link
 [source,bash]
 ----
 # Run from anywhere without chmod
-2adoc ./my.docx ./my.adoc
+doc-to-adoc ./my.docx ./my.adoc
 ----
 
 [source,bash]
 ----
 # Run from anywhere without chmod
-2adoc ./my.docx ./my.txt -t txt
+doc-to-adoc ./my.docx ./my.txt -t txt
 ----

@@ -18,18 +18,18 @@ async function run(): Promise<void> {
 	});
 
 	if (values.version) {
-		console.log("2adoc v1.0.0");
+		console.log("doc-to-adoc v1.0.0");
 		process.exit(0);
 	}
 
 	if (values.help) {
 		console.log(
 			`
-2adoc – Universal Document & Data to AsciiDoc Converter
+doc-to-adoc – Universal Document & Data to AsciiDoc Converter
 
 Usage:
-  2adoc <input-file> [output-file] [options]
-  2adoc -i <input-file> -o <output-file> -t <type>
+  doc-to-adoc <input-file> [output-file] [options]
+  doc-to-adoc -i <input-file> -o <output-file> -t <type>
 
 Options:
   -i, --input <file>   Input file path
@@ -47,7 +47,7 @@ Options:
 	const outputFile = values.output || positionals[1];
 
 	if (!inputFile) {
-		console.error("Error: Missing input file. Run '2adoc --help' for usage.");
+		console.error("Error: Missing input file. Run 'doc-to-adoc --help' for usage.");
 		process.exit(1);
 	}
 

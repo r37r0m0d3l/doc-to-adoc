@@ -1,10 +1,10 @@
 {
 	"author": "r37r0m0d3l@proton.me",
 	"bin": {
-		"2adoc": "./bin/cli.js"
+		"doc-to-adoc": "./bin/cli.js"
 	},
 	"bugs": {
-		"url": "https://github.com/r37r0m0d3l/2adoc/issues"
+		"url": "https://github.com/r37r0m0d3l/doc-to-adoc/issues"
 	},
 	"dependencies": {
 		"@asciidoctor/core": "4.0.6",
@@ -36,7 +36,7 @@
 		"dist",
 		"bin"
 	],
-	"homepage": "https://github.com/r37r0m0d3l/2adoc#readme",
+	"homepage": "https://github.com/r37r0m0d3l/doc-to-adoc#readme",
 	"keywords": [
 		"asciidoc",
 		"adoc",
@@ -51,10 +51,10 @@
 	],
 	"license": "MIT",
 	"main": "./dist/index.js",
-	"name": "2adoc",
+	"name": "doc-to-adoc",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/r37r0m0d3l/2adoc.git"
+		"url": "git+https://github.com/r37r0m0d3l/doc-to-adoc.git"
 	},
 	"scripts": {
 		"build": "npm run type-check && npm run lint && npm run build:types && npm run build:js",

@@ -1,4 +1,4 @@
-# 2adoc 📄➡️📝
+# doc-to-adoc 📄➡️📝
 
 > Universal utility (CLI & Library) to convert 21 document and structured data formats into canonical **AsciiDoc (`.adoc`)**.
 
@@ -19,7 +19,7 @@ workflows.
 
 ### Library Usage
 ```javascript
-import { convert } from '2adoc';
+import { convert } from 'doc-to-adoc';
 
 const content = await convert({
   input: './my.docx',
@@ -33,7 +33,7 @@ console.log(content);
 ### Basic Conversion
 ```bash
 # Convert DOCX to AsciiDoc
-2adoc ./my.docx ./my.adoc
+doc-to-adoc ./my.docx ./my.adoc
 ```
 
 ### Output Types
@@ -44,10 +44,10 @@ Support for different output formats via `-type` (or `--type`, `-t`):
 
 ```bash
 # Convert PDF to Markdown
-2adoc -input ./report.pdf -type markdown
+doc-to-adoc -input ./report.pdf -type markdown
 
 # Convert Excel to Plain Text
-2adoc ./data.xlsx ./output.txt -type text
+doc-to-adoc ./data.xlsx ./output.txt -type text
 ```
 
 ## 🚀 Local Execution
@@ -64,10 +64,10 @@ npm link
 
 ```bash
 # Run from anywhere without chmod
-2adoc ./my.docx ./my.adoc
+doc-to-adoc ./my.docx ./my.adoc
 ```
 
 ```bash
 # Run from anywhere without chmod
-2adoc ./my.docx ./my.txt -t txt
+doc-to-adoc ./my.docx ./my.txt -t txt
 ```
