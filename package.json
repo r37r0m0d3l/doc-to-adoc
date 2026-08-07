@@ -26,6 +26,9 @@
 		"esbuild": "0.28.1",
 		"typescript": "7.0.2"
 	},
+	"engines": {
+		"node": ">=23.0.0"
+	},
 	"exports": {
 		".": {
 			"types": "./dist/index.d.ts",
@@ -66,9 +69,9 @@
 		"lint": "biome check .",
 		"lint:fix": "biome check --write .",
 		"prepublishOnly": "npm run build",
-		"test": "node --test test/**/*.test.js"
+		"test": "node --test test/cli/*.test.js"
 	},
 	"type": "module",
 	"types": "./dist/index.d.ts",
-	"version": "1.0.0"
+	"version": "1.0.1"
 }

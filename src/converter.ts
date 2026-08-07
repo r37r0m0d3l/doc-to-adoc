@@ -20,7 +20,6 @@ const xmlParser = new XMLParser({ ignoreAttributes: false });
  * Map of extensions that Pandoc excels at converting natively.
  */
 export const PANDOC_PRIMARY_FORMATS: Record<string, string> = {
-	".docx": "docx",
 	".htm": "html",
 	".html": "html",
 	".latex": "latex",
@@ -53,16 +52,19 @@ export function isPandocAvailable(): boolean {
 // 1. PDF Conversion (pdf-parse)
 export async function convertPdfToAdoc(buffer: Buffer): Promise<string> {
 	const parser = new PDFParse({ data: buffer });
+	try {
+		const info = await parser.getInfo();
+		const title = info.info?.Title?.trim();
+		const result = await parser.getText();
 
-	const info = await parser.getInfo();
-	const title = info.info?.Title?.trim();
-	const result = await parser.getText();
+		if (title) {
+			return `= ${title}\n\n${result.text}`;
+		}
 
-	if (title) {
-		return `= ${title}\n\n${result.text}`;
+		return result.text;
+	} finally {
+		await parser.destroy();
 	}
-
-	return result.text;
 }
 
 // 2. DOC / DOCX Extraction (mammoth)
@@ -241,23 +243,12 @@ export async function convertNativeFallback(inputFile: string, ext: string): Pro
 
 	switch (ext.toLowerCase()) {
 		// 1. PDF
-		case ".pdf": {
-			const parser = new PDFParse({ data: fileBuffer });
-			try {
-				const info = await parser.getInfo();
-				const title = info.info?.Title?.trim();
-				const result = await parser.getText();
-				return title ? `= ${title}\n\n${result.text}` : result.text;
-			} finally {
-				await parser.destroy();
-			}
-		}
+		case ".pdf":
+			return convertPdfToAdoc(fileBuffer);
 
 		// 2. Word Documents (Mammoth only supports .docx)
-		case ".docx": {
-			const result = await mammoth.extractRawText({ buffer: fileBuffer });
-			return result.value;
-		}
+		case ".docx":
+			return convertDocxToAdoc(fileBuffer);
 
 		// 3. Tabular Data
 		case ".csv":

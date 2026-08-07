@@ -1,41 +1,41 @@
 #!/usr/bin/env node
-import g from"node:fs/promises";import T from"node:path";import{parseArgs as J}from"node:util";import{spawnSync as d}from"node:child_process";import{existsSync as P}from"node:fs";import C from"node:fs/promises";import*as p from"node:path";import{convert as h}from"@asciidoctor/core";import{parse as j}from"csv-parse/sync";import{XMLParser as B}from"fast-xml-parser";import*as m from"js-yaml";import E from"mammoth";import{PDFParse as I}from"pdf-parse";import{parse as v}from"smol-toml";import $ from"turndown";import{utils as D,read as R}from"xlsx";var k=new B({ignoreAttributes:!1}),y={".docx":"docx",".htm":"html",".html":"html",".latex":"latex",".markdown":"markdown",".md":"markdown",".mdx":"markdown",".mediawiki":"mediawiki",".odf":"odt",".odt":"odt",".org":"org",".rst":"rst",".rtf":"rtf",".tex":"latex",".wiki":"mediawiki"};function N(){try{let r=d("pandoc",["--version"],{stdio:"ignore"});return r.status===0&&!r.error}catch{return!1}}function f(r,n=","){let t=j(r,{skip_empty_lines:!0,delimiter:n});if(t.length===0)return"";let e=t[0],s=t.slice(1),o=`[options="header"]
-|===
-`;o+=`| ${e.map(a=>String(a).replace(/\|/g,"\\|")).join(" | ")}
+import w from"node:fs/promises";import T from"node:path";import{parseArgs as H}from"node:util";import{spawnSync as d}from"node:child_process";import{existsSync as P}from"node:fs";import C from"node:fs/promises";import*as p from"node:path";import{convert as y}from"@asciidoctor/core";import{parse as j}from"csv-parse/sync";import{XMLParser as B}from"fast-xml-parser";import*as f from"js-yaml";import E from"mammoth";import{PDFParse as D}from"pdf-parse";import{parse as $}from"smol-toml";import k from"turndown";import{utils as I,read as N}from"xlsx";var S=new B({ignoreAttributes:!1}),v={".htm":"html",".html":"html",".latex":"latex",".markdown":"markdown",".md":"markdown",".mdx":"markdown",".mediawiki":"mediawiki",".odf":"odt",".odt":"odt",".org":"org",".rst":"rst",".rtf":"rtf",".tex":"latex",".wiki":"mediawiki"};function R(){try{let t=d("pandoc",["--version"],{stdio:"ignore"});return t.status===0&&!t.error}catch{return!1}}async function F(t){let o=new D({data:t});try{let r=(await o.getInfo()).info?.Title?.trim(),s=await o.getText();return r?`= ${r}
 
-`;for(let a of s)o+=`| ${a.map(i=>String(i).replace(/\|/g,"\\|")).join(" | ")}
-`;return o+=`|===
-`,o}function F(r){let n=R(r),t=n.SheetNames[0];if(!t)return"";let e=n.Sheets[t],s=D.sheet_to_csv(e);return f(s,",")}function L(r){let n=r.replace(/<head[^>]*>[\s\S]*?<\/head>/gi,"").replace(/<style[^>]*>[\s\S]*?<\/style>/gi,"").replace(/<script[^>]*>[\s\S]*?<\/script>/gi,""),e=new $({headingStyle:"atx"}).turndown(n);return _(e)}function l(r,n){let t=r;if(typeof r=="string")try{n==="json"?t=JSON.parse(r):n==="yaml"?t=m.load(r):n==="toml"?t=v(r):n==="xml"&&(t=k.parse(r))}catch{return`[source,${n}]
+${s.text}`:s.text}finally{await o.destroy()}}async function L(t){let{value:o}=await E.convertToMarkdown({buffer:t});return g(o)}function m(t,o=","){let e=j(t,{skip_empty_lines:!0,delimiter:o});if(e.length===0)return"";let r=e[0],s=e.slice(1),n=`[options="header"]
+|===
+`;n+=`| ${r.map(i=>String(i).replace(/\|/g,"\\|")).join(" | ")}
+
+`;for(let i of s)n+=`| ${i.map(a=>String(a).replace(/\|/g,"\\|")).join(" | ")}
+`;return n+=`|===
+`,n}function M(t){let o=N(t),e=o.SheetNames[0];if(!e)return"";let r=o.Sheets[e],s=I.sheet_to_csv(r);return m(s,",")}function U(t){let o=t.replace(/<head[^>]*>[\s\S]*?<\/head>/gi,"").replace(/<style[^>]*>[\s\S]*?<\/style>/gi,"").replace(/<script[^>]*>[\s\S]*?<\/script>/gi,""),r=new k({headingStyle:"atx"}).turndown(o);return g(r)}function l(t,o){let e=t;if(typeof t=="string")try{o==="json"?e=JSON.parse(t):o==="yaml"?e=f.load(t):o==="toml"?e=$(t):o==="xml"&&(e=S.parse(t))}catch{return`[source,${o}]
 ----
-${r.trim()}
+${t.trim()}
 ----
-`}return typeof t!="object"||t===null?`[source,${n}]
+`}return typeof e!="object"||e===null?`[source,${o}]
 ----
-${String(t).trim()}
+${String(e).trim()}
 ----
-`:S(t)}function S(r,n=1){let t="",e="*".repeat(n);for(let[s,o]of Object.entries(r))typeof o=="object"&&o!==null?(t+=`${e} *${s}:*
-`,t+=S(o,n+1)):t+=`${e} *${s}:* ${o}
-`;return t}function _(r){let n=[],t=r;return t=t.replace(/```(\w*)\r?\n([\s\S]*?)```/g,(e,s,o)=>{let a=`\xA7CODEBLOCK${n.length}\xA7`;return n.push(`${s?`[source,${s}]
+`:_(e)}function _(t,o=1){let e="",r="*".repeat(o);for(let[s,n]of Object.entries(t))typeof n=="object"&&n!==null?(e+=`${r} *${s}:*
+`,e+=_(n,o+1)):e+=`${r} *${s}:* ${n}
+`;return e}function g(t){let o=[],e=t;return e=e.replace(/```(\w*)\r?\n([\s\S]*?)```/g,(r,s,n)=>{let i=`\xA7CODEBLOCK${o.length}\xA7`;return o.push(`${s?`[source,${s}]
 `:`[source]
 `}----
-${o.trim()}
+${n.trim()}
 ----
-`),a}),t=t.replace(/^[*+_-]{3,}$/gm,"'''"),t=t.replace(/(\*\*\*|___)(.*?)\1/g,"\xA7BI\xA7$2\xA7BI\xA7"),t=t.replace(/(\*\*|__)(.*?)\1/g,"\xA7B\xA7$2\xA7B\xA7"),t=t.replace(/(\*|_)(.*?)\1/g,"\xA7I\xA7$2\xA7I\xA7"),t=t.replace(/^(?:<a id=".*"><\/a>)?######\s+(.*)$/gm,"====== $1"),t=t.replace(/^(?:<a id=".*"><\/a>)?#####\s+(.*)$/gm,"===== $1"),t=t.replace(/^(?:<a id=".*"><\/a>)?####\s+(.*)$/gm,"==== $1"),t=t.replace(/^(?:<a id=".*"><\/a>)?###\s+(.*)$/gm,"=== $1"),t=t.replace(/^(?:<a id=".*"><\/a>)?##\s+(.*)$/gm,"== $1"),t=t.replace(/^(?:<a id=".*"><\/a>)?#\s+(.*)$/gm,"= $1"),t=t.replace(/(^>.*\n?)+/gm,e=>`[quote]
+`),i}),e=e.replace(/^[*+_-]{3,}$/gm,"'''"),e=e.replace(/(\*\*\*|___)(.*?)\1/g,"\xA7BI\xA7$2\xA7BI\xA7"),e=e.replace(/(\*\*|__)(.*?)\1/g,"\xA7B\xA7$2\xA7B\xA7"),e=e.replace(/(\*|_)(.*?)\1/g,"\xA7I\xA7$2\xA7I\xA7"),e=e.replace(/^(?:<a id=".*"><\/a>)?######\s+(.*)$/gm,"====== $1"),e=e.replace(/^(?:<a id=".*"><\/a>)?#####\s+(.*)$/gm,"===== $1"),e=e.replace(/^(?:<a id=".*"><\/a>)?####\s+(.*)$/gm,"==== $1"),e=e.replace(/^(?:<a id=".*"><\/a>)?###\s+(.*)$/gm,"=== $1"),e=e.replace(/^(?:<a id=".*"><\/a>)?##\s+(.*)$/gm,"== $1"),e=e.replace(/^(?:<a id=".*"><\/a>)?#\s+(.*)$/gm,"= $1"),e=e.replace(/(^>.*\n?)+/gm,r=>`[quote]
 ____
-${e.split(`
-`).map(o=>o.replace(/^>\s?/,"")).filter(o=>o.length>0).join(`
+${r.split(`
+`).map(n=>n.replace(/^>\s?/,"")).filter(n=>n.length>0).join(`
 `)}
 ____
 
-`),t=t.replace(/^[ \t]*[-*+]\s+(.*)$/gm,"* $1"),t=t.replace(/^[ \t]*\d+\.\s+(.*)$/gm,". $1"),t=t.replace(/^(\|.*\|)\r?\n\|(?:[ \t]*:?-+:?[ \t]*\|)+\r?\n((\|.*\|\r?\n?)*)/gm,(e,s,o)=>{let a=u=>u.split("|").filter((w,x,O)=>x>0&&x<O.length-1).map(w=>w.trim()),i=a(s),A=o.trim().split(`
-`).map(a),c=`[options="header"]
+`),e=e.replace(/^[ \t]*[-*+]\s+(.*)$/gm,"* $1"),e=e.replace(/^[ \t]*\d+\.\s+(.*)$/gm,". $1"),e=e.replace(/^(\|.*\|)\r?\n\|(?:[ \t]*:?-+:?[ \t]*\|)+\r?\n((\|.*\|\r?\n?)*)/gm,(r,s,n)=>{let i=u=>u.split("|").filter((h,x,O)=>x>0&&x<O.length-1).map(h=>h.trim()),a=i(s),A=n.trim().split(`
+`).map(i),c=`[options="header"]
 |===
-`;c+=`| ${i.join(" | ")}
+`;c+=`| ${a.join(" | ")}
 `;for(let u of A)c+=`| ${u.join(" | ")}
 `;return c+=`|===
-`,c}),t=t.replace(/!\[([^\]]*)\]\(([^)]+)\)/g,"image:$2[$1]"),t=t.replace(/\[([^\]]+)\]\(([^)]+)\)/g,"$2[$1]"),t=t.replace(/§BI§/g,"***"),t=t.replace(/§B§/g,"*"),t=t.replace(/§I§/g,"_"),n.forEach((e,s)=>{t=t.replace(`\xA7CODEBLOCK${s}\xA7`,e)}),t.trim()}async function M(r,n){let t=await C.readFile(r),e=t.toString("utf-8");switch(n.toLowerCase()){case".pdf":{let s=new I({data:t});try{let a=(await s.getInfo()).info?.Title?.trim(),i=await s.getText();return a?`= ${a}
-
-${i.text}`:i.text}finally{await s.destroy()}}case".docx":return(await E.extractRawText({buffer:t})).value;case".csv":return f(e,",");case".tsv":return f(e,"	");case".xlsx":case".ods":return F(t);case".html":case".htm":return L(e);case".json":return l(JSON.parse(e),"json");case".yaml":case".yml":return l(m.load(e),"yaml");case".toml":return l(v(e),"toml");case".xml":return l(k.parse(e),"xml");case".md":case".markdown":case".mdx":return _(e);default:return e}}async function U(r,n){if(N()&&y[n]){let e=y[n],s=[r,"-t","asciidoc"];e&&s.unshift("-f",e);let o=d("pandoc",s,{encoding:"utf-8"});if(o.status===0)return o.stdout;let a=d("pandoc",[r,"-t","asciidoc"],{encoding:"utf-8"});if(a.status===0)return a.stdout}return M(r,n)}async function b(r){let{input:n,type:t="adoc"}=r,e=p.resolve(process.cwd(),n);if(!P(e))throw new Error(`File not found "${e}"`);let s=p.extname(e).toLowerCase(),o=await U(e,s);if(t==="md"||t==="markdown"){let a=await h(o,{attributes:{doctype:"book"}});o=new $({headingStyle:"atx"}).turndown(a)}else(t==="txt"||t==="text")&&(o=(await h(o,{attributes:{doctype:"book"}})).replace(/<style[^>]*>[\s\S]*?<\/style>/gi,"").replace(/<script[^>]*>[\s\S]*?<\/script>/gi,"").replace(/\r?\n/g," ").replace(/<h[1-6][^>]*>/gi,`
+`,c}),e=e.replace(/!\[([^\]]*)\]\(([^)]+)\)/g,"image:$2[$1]"),e=e.replace(/\[([^\]]+)\]\(([^)]+)\)/g,"$2[$1]"),e=e.replace(/§BI§/g,"***"),e=e.replace(/§B§/g,"*"),e=e.replace(/§I§/g,"_"),o.forEach((r,s)=>{e=e.replace(`\xA7CODEBLOCK${s}\xA7`,r)}),e.trim()}async function J(t,o){let e=await C.readFile(t),r=e.toString("utf-8");switch(o.toLowerCase()){case".pdf":return F(e);case".docx":return L(e);case".csv":return m(r,",");case".tsv":return m(r,"	");case".xlsx":case".ods":return M(e);case".html":case".htm":return U(r);case".json":return l(JSON.parse(r),"json");case".yaml":case".yml":return l(f.load(r),"yaml");case".toml":return l($(r),"toml");case".xml":return l(S.parse(r),"xml");case".md":case".markdown":case".mdx":return g(r);default:return r}}async function q(t,o){if(R()&&v[o]){let r=v[o],s=[t,"-t","asciidoc"];r&&s.unshift("-f",r);let n=d("pandoc",s,{encoding:"utf-8"});if(n.status===0)return n.stdout;let i=d("pandoc",[t,"-t","asciidoc"],{encoding:"utf-8"});if(i.status===0)return i.stdout}return J(t,o)}async function b(t){let{input:o,type:e="adoc"}=t,r=p.resolve(process.cwd(),o);if(!P(r))throw new Error(`File not found "${r}"`);let s=p.extname(r).toLowerCase(),n=await q(r,s);if(e==="md"||e==="markdown"){let i=await y(n,{attributes:{doctype:"book"}});n=new k({headingStyle:"atx"}).turndown(i)}else(e==="txt"||e==="text")&&(n=(await y(n,{attributes:{doctype:"book"}})).replace(/<style[^>]*>[\s\S]*?<\/style>/gi,"").replace(/<script[^>]*>[\s\S]*?<\/script>/gi,"").replace(/\r?\n/g," ").replace(/<h[1-6][^>]*>/gi,`
 
 `).replace(/<p[^>]*>/gi,`
 
@@ -45,12 +45,12 @@ ${i.text}`:i.text}finally{await s.destroy()}}case".docx":return(await E.extractR
 `).replace(/<(?:td|th)[^>]*>/gi," | ").replace(/<div[^>]*>/gi,`
 `).replace(/<[^>]*>/g,"").replace(/&nbsp;/g," ").replace(/&amp;/g,"&").replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/[ \t]+/g," ").replace(/ \| \s+/g," | ").replace(/\* \s+/g,"* ").replace(/\n\s*\n\s*\n+/g,`
 
-`).trim());return o}async function q(){let{values:r,positionals:n}=J({options:{input:{type:"string",short:"i"},output:{type:"string",short:"o"},type:{type:"string",short:"t",default:"adoc"},force:{type:"boolean",short:"f",default:!1},version:{type:"boolean",short:"v"},help:{type:"boolean",short:"h"}},allowPositionals:!0});r.version&&(console.log("2adoc v1.0.0"),process.exit(0)),r.help&&(console.log(`
-2adoc \u2013 Universal Document & Data to AsciiDoc Converter
+`).trim());return n}async function K(){let{values:t,positionals:o}=H({options:{input:{type:"string",short:"i"},output:{type:"string",short:"o"},type:{type:"string",short:"t",default:"adoc"},force:{type:"boolean",short:"f",default:!1},version:{type:"boolean",short:"v"},help:{type:"boolean",short:"h"}},allowPositionals:!0});t.version&&(console.log("doc-to-adoc v1.0.0"),process.exit(0)),t.help&&(console.log(`
+doc-to-adoc \u2013 Universal Document & Data to AsciiDoc Converter
 
 Usage:
-  2adoc <input-file> [output-file] [options]
-  2adoc -i <input-file> -o <output-file> -t <type>
+  doc-to-adoc <input-file> [output-file] [options]
+  doc-to-adoc -i <input-file> -o <output-file> -t <type>
 
 Options:
   -i, --input <file>   Input file path
@@ -59,5 +59,5 @@ Options:
   -f, --force          Overwrite output files if it already exists
   -v, --version        Show version
   -h, --help           Show help
-    `.trim()),process.exit(0));let t=r.input||n[0],e=r.output||n[1];t||(console.error("Error: Missing input file. Run '2adoc --help' for usage."),process.exit(1));let s=(r.type||"adoc").toLowerCase();["adoc","asciidoc","md","markdown","txt","text"].includes(s)||(console.error(`Error: Unsupported output type '${s}'. Valid types: adoc, md, txt.`),process.exit(1));try{let o=await b({input:t,type:s});if(e){if(!r.force)try{await g.access(e),console.error(`Error: Output file '${e}' already exists. Use -f or --force to overwrite.`),process.exit(1)}catch(a){if(a.code!=="ENOENT")throw a}await g.mkdir(T.dirname(T.resolve(e)),{recursive:!0}),await g.writeFile(e,o,"utf-8")}else process.stdout.write(o)}catch(o){console.error("Conversion failed:",o instanceof Error?o.message:o),process.exit(2)}}q().then(()=>process.exit(0)).catch(r=>{console.error(r),process.exit(3)});
+    `.trim()),process.exit(0));let e=t.input||o[0],r=t.output||o[1];e||(console.error("Error: Missing input file. Run 'doc-to-adoc --help' for usage."),process.exit(1));let s=(t.type||"adoc").toLowerCase();["adoc","asciidoc","md","markdown","txt","text"].includes(s)||(console.error(`Error: Unsupported output type '${s}'. Valid types: adoc, md, txt.`),process.exit(1));try{let n=await b({input:e,type:s});if(r){if(!t.force)try{await w.access(r),console.error(`Error: Output file '${r}' already exists. Use -f or --force to overwrite.`),process.exit(1)}catch(i){if(i.code!=="ENOENT")throw i}await w.mkdir(T.dirname(T.resolve(r)),{recursive:!0}),await w.writeFile(r,n,"utf-8")}else process.stdout.write(n)}catch(n){console.error("Conversion failed:",n instanceof Error?n.message:n),process.exit(2)}}K().then(()=>process.exit(0)).catch(t=>{console.error(t),process.exit(3)});
 //# sourceMappingURL=cli.js.map

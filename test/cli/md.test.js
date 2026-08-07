@@ -8,7 +8,7 @@ describe("CLI: Convert to Markdown", () => {
 		const htmlPath = "test/docs/sample.html";
 		const outputPath = "test/output/sample_html.md";
 		try {
-			const result = runCLI([htmlPath, outputPath, "-type", "md"]);
+			const result = runCLI([htmlPath, outputPath, "--type", "md"]);
 			assert.strictEqual(result.status, 0, `CLI failed: ${result.stderr}`);
 			const content = readOutputFile(outputPath);
 			assert.ok(content.includes("AsciiDoc Comprehensive Feature Test Suite"), "Missing main title text in Markdown");
@@ -38,7 +38,7 @@ describe("CLI: Convert to Markdown", () => {
 		const jsonPath = "test/docs/sample.json";
 		const outputPath = "test/output/sample_json.md";
 		try {
-			const result = runCLI([jsonPath, outputPath, "-type", "md"]);
+			const result = runCLI([jsonPath, outputPath, "--type", "md"]);
 			assert.strictEqual(result.status, 0, `CLI failed: ${result.stderr}`);
 			const content = readOutputFile(outputPath);
 			assert.ok(content.includes("first") && content.includes("name"), "Missing field first_name in Markdown");

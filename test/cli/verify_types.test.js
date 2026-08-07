@@ -15,7 +15,7 @@ describe("CLI: Verify output types", () => {
 
 	test("should create adoc output by default", () => {
 		const outputPath = `${outputPrefix}_default.adoc`;
-		const result = runCLI([testInput, outputPath]);
+		const result = runCLI([testInput, outputPath, "-f"]);
 		assert.strictEqual(result.status, 0);
 		assert.ok(fs.existsSync(outputPath), "adoc output should be created");
 		const content = fs.readFileSync(outputPath, "utf-8");
@@ -24,7 +24,7 @@ describe("CLI: Verify output types", () => {
 
 	test("should create markdown output with -type markdown", () => {
 		const outputPath = `${outputPrefix}.md`;
-		const result = runCLI([testInput, "-type", "markdown", "-output", outputPath]);
+		const result = runCLI([testInput, "--type", "markdown", "--output", outputPath, "-f"]);
 		assert.strictEqual(result.status, 0);
 		assert.ok(fs.existsSync(outputPath), "markdown output should be created");
 		const content = fs.readFileSync(outputPath, "utf-8");
@@ -35,7 +35,7 @@ describe("CLI: Verify output types", () => {
 
 	test("should create text output with -t text", () => {
 		const outputPath = `${outputPrefix}.txt`;
-		const result = runCLI([testInput, "-t", "text", "-o", outputPath]);
+		const result = runCLI([testInput, "-t", "text", "-o", outputPath, "-f"]);
 		assert.strictEqual(result.status, 0);
 		assert.ok(fs.existsSync(outputPath), "text output should be created");
 		const content = fs.readFileSync(outputPath, "utf-8");
@@ -45,7 +45,7 @@ describe("CLI: Verify output types", () => {
 	test("should handle automatic output name for markdown", () => {
 		const mdInput = "test/docs/sample.md";
 		// This might overwrite if not careful, but we test the CLI behavior
-		const result = runCLI([mdInput, "-type", "markdown"]);
+		const result = runCLI([mdInput, "--type", "markdown"]);
 		assert.strictEqual(result.status, 0);
 		// The CLI currently appends .md if not present, but here it is present.
 		// According to bin/cli.js: output = path.join(parsedPath.dir, `${parsedPath.name}.${outExt}`);

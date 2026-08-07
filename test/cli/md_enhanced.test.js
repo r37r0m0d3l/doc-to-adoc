@@ -42,7 +42,7 @@ describe("CLI: Enhanced Markdown Conversion", () => {
 	});
 
 	test("should convert complex markdown via CLI", () => {
-		const result = runCLI([testInput, outputPath]);
+		const result = runCLI([testInput, outputPath, "-f"]);
 		assert.strictEqual(result.status, 0);
 		assert.ok(fs.existsSync(outputPath), "Output should be created");
 
