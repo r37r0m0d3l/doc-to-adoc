@@ -1,7 +1,7 @@
 import assert from "node:assert";
 import fs from "node:fs";
 import { describe, test } from "node:test";
-import { convertPdfToAdoc } from "../../bin/converter.js";
+import { convertPdfToAdoc } from "../../dist/index.js";
 
 describe("NPM: PDF to AsciiDoc", () => {
 	test("should convert PDF buffer to AsciiDoc", async () => {

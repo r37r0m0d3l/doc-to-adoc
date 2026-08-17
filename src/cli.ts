@@ -4,6 +4,25 @@ import path from "node:path";
 import { parseArgs } from "node:util";
 import { convert } from "./index.js";
 
+async function getCliVersion(): Promise<string> {
+	const packageJsonPath = new URL("../package.json", import.meta.url);
+	const packageJson = await fs.readFile(packageJsonPath, "utf-8");
+	const { version } = JSON.parse(packageJson) as { version?: string };
+	return version ?? "0.0.0";
+}
+
+async function writeStdout(content: string): Promise<void> {
+	await new Promise<void>((resolve, reject) => {
+		process.stdout.write(content, (error) => {
+			if (error) {
+				reject(error);
+				return;
+			}
+			resolve();
+		});
+	});
+}
+
 async function run(): Promise<void> {
 	const { values, positionals } = parseArgs({
 		options: {
@@ -18,7 +37,7 @@ async function run(): Promise<void> {
 	});
 
 	if (values.version) {
-		console.log("doc-to-adoc v1.0.0");
+		console.log(`doc-to-adoc v${await getCliVersion()}`);
 		process.exit(0);
 	}
 
@@ -80,7 +99,7 @@ Options:
 			await fs.mkdir(path.dirname(path.resolve(outputFile)), { recursive: true });
 			await fs.writeFile(outputFile, result, "utf-8");
 		} else {
-			process.stdout.write(result);
+			await writeStdout(result);
 		}
 	} catch (error: unknown) {
 		console.error("Conversion failed:", error instanceof Error ? error.message : error);

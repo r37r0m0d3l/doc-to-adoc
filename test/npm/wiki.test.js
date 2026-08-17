@@ -1,6 +1,6 @@
 import assert from "node:assert";
 import { describe, test } from "node:test";
-import { getAdocContent } from "../../bin/converter.js";
+import { getAdocContent } from "../../dist/index.js";
 
 describe("NPM: MediaWiki to AsciiDoc (via getAdocContent)", () => {
 	test("should convert sample.wiki to AsciiDoc", async () => {

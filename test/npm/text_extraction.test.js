@@ -2,7 +2,7 @@ import assert from "node:assert";
 import * as fs from "node:fs";
 import * as path from "node:path";
 import { describe, test } from "node:test";
-import { convert } from "../../bin/converter.js";
+import { convert } from "../../dist/index.js";
 
 describe("NPM: Text Extraction", () => {
 	const tableAdoc = `
