@@ -1,5 +1,13 @@
 # 📝 Changelog
 
+## [1.1.1]
+
+### Added
+
+- ➕ `llms.txt`
+
+- ➕ `llms-full.txt`
+
 ## [1.1.0]
 
 ### Added

@@ -1,0 +1,165 @@
+# doc-to-adoc - Full Context Reference
+
+## Deep Dive Architecture
+`doc-to-adoc` is built around a single public entrypoint, `convert()`, exported from `src/index.ts` and implemented in `src/converter.ts`. The runtime flow is:
+
+1. Resolve `input` relative to `process.cwd()`.
+2. Validate the file exists; otherwise throw `new Error('File not found "..."')`.
+3. Detect the file extension and route to `getAdocContent()`.
+4. If Pandoc is available and the extension matches a primary Pandoc format, run `pandoc <input> -f <format> -t asciidoc` and use the stdout result.
+5. Otherwise, use `convertNativeFallback()`, which dispatches by file type to specialized converters for PDF, images, Word docs, spreadsheets, HTML, structured data, Markdown, ODT, and RTF.
+6. If the caller requests `type` of `md`/`markdown`, convert the AsciiDoc output through Asciidoctor to HTML and then through Turndown to Markdown.
+7. If the caller requests `type` of `txt`/`text`, convert the AsciiDoc output through Asciidoctor to HTML and then strip tags and inline markup into plain text.
+
+The library is intentionally narrow: it does not expose a reducer or CLI-config abstraction beyond the public `ConvertOptions` contract. It reads no environment variables directly from `process.env`; its behavior is driven by the filesystem and presence of the `pandoc` binary, when applicable.
+
+### Supported input families
+- Documents: `.doc`, `.docx`, `.pdf`, `.rtf`, `.odf`, `.odt`, `.latex`, `.tex`
+- Data: `.csv`, `.json`, `.ods`, `.tsv`, `.xls`, `.xlsx`, `.xml`, `.yaml`, `.yml`, `.toml`
+- Markup: `.htm`, `.html`, `.md`, `.markdown`, `.mdc`, `.mdx`, `.mediawiki`, `.org`, `.rst`, `.typ`, `.wiki`
+- Images (OCR): `.apng`, `.bmp`, `.gif`, `.jpeg`, `.jpg`, `.pbm`, `.png`, `.tif`, `.tiff`, `.webp`
+
+### Configuration and CLI options
+Public library configuration is defined by the exported interface `ConvertOptions` in `src/converter.ts`:
+- `input: string` — required a file path to read.
+- `type?: string | "markdown" | "md" | "text" | "txt"` — optional output mode; default is `"adoc"`.
+
+CLI configuration in `src/cli.ts`:
+- `-i, --input <file>`
+- `-o, --output <file>`
+- `-t, --type <type>` with accepted values: `adoc`, `asciidoc`, `md`, `markdown`, `txt`, `text`
+- `-f, --force` to overwrite an existing output file
+- `-v, --version`
+- `-h, --help`
+
+Environment variables: none are directly read by the source code under `src/`.
+
+## Exhaustive API Reference
+### `convert`
+Defined in `src/converter.ts`.
+
+Signature:
+```typescript
+export async function convert(options: ConvertOptions): Promise<string>;
+```
+
+Parameters:
+- `options: ConvertOptions` — Input object containing a file path and optional output format.
+
+Return type:
+- `Promise<string>` — The converted content as a string.
+
+Behavior:
+- Resolves the input path from `process.cwd()`.
+- Throws `Error` when the file does not exist.
+- Detects the input extension and routes to Pandoc or native converters.
+- Converts to Markdown or plain text only when `type` is `md`/`markdown` or `txt`/`text`.
+- Returns AsciiDoc by default.
+
+Error conditions:
+- If `existsSync(resolvedInput)` is false, throws `Error('File not found "..."')`.
+- If the format is unsupported by Pandoc and by native fallback, it returns the raw UTF-8 text unchanged.
+- CLI wrappers catch errors and exit non-zero for conversion failures.
+
+Example:
+```typescript
+import { convert } from "doc-to-adoc";
+
+const adoc = await convert({
+  input: "./report.pdf",
+  type: "adoc",
+});
+
+console.log(adoc.slice(0, 200));
+```
+
+### `ConvertOptions`
+Defined in `src/converter.ts`.
+
+Signature:
+```typescript
+export interface ConvertOptions {
+  input: string;
+  type?: string | "markdown" | "md" | "text" | "txt";
+}
+```
+
+Properties:
+- `input: string` — Required source file path.
+- `type?: ...` — Optional output format. Supported values include `adoc`, `asciidoc`, `md`, `markdown`, `txt`, `text`.
+
+Example:
+```typescript
+import { convert, type ConvertOptions } from "doc-to-adoc";
+
+const opts: ConvertOptions = {
+  input: "./data.xlsx",
+  type: "text",
+};
+
+const output = await convert(opts);
+console.log(output);
+```
+
+### CLI entrypoint
+Defined in `src/cli.ts` and packaged as `bin/cli.js`.
+
+Behavior:
+- Uses Node's `parseArgs` to support option-based invocation.
+- Validates the required input path and allowed output types.
+- Writes to stdout when no output file is provided.
+- Refuses to overwrite output files unless `--force` is passed.
+
+Example:
+```bash
+doc-to-adoc ./my.docx ./my.adoc
+```
+
+```bash
+doc-to-adoc -i ./report.pdf -t markdown -o ./report.md
+```
+
+### Internal conversion pipeline (not exported)
+Defined in `src/converter.ts`.
+
+`convertNativeFallback(inputFile: string, ext: string): Promise<string>`
+- Reads the raw file as UTF-8 when needed.
+- Dispatches to specialized converters by extension.
+
+`getAdocContent(inputFile: string, ext: string): Promise<string>`
+- Calls Pandoc when available and the extension is recognized.
+- Falls back to `convertNativeFallback()` when Pandoc is missing or conversion fails.
+
+Example:
+```typescript
+// The library does this internally:
+const adoc = await convert({ input: "./input.html", type: "adoc" });
+```
+
+## Type Definitions
+
+```typescript
+export interface ConvertOptions {
+  /**
+   * @name input
+   * @description Source file path
+   * @type string
+   */
+  input: string;
+  /**
+   * @name type
+   * @description Pipe to type: AsciiDoc -> Markdown, AsciiDoc -> plain text
+   * @type string
+   */
+  type?: string | "markdown" | "md" | "text" | "txt";
+}
+```
+
+```typescript
+export type { ConvertOptions } from "doc-to-adoc";
+export { convert } from "doc-to-adoc";
+```
+
+```typescript
+export async function convert(options: ConvertOptions): Promise<string>;
+```

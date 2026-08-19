@@ -1,0 +1,53 @@
+# doc-to-adoc
+
+`doc-to-adoc` is a Node.js ESM library and CLI that converts document, spreadsheet, markup, and image files into canonical AsciiDoc for technical writing, RAG pipelines, and automated documentation workflows. It targets JavaScript/TypeScript projects and resolves a wide range of file formats into a single normalized output.
+
+```typescript
+import { convert } from "doc-to-adoc";
+
+const outputContentWithAdoc = await convert({
+  input: "./my.docx",
+  type: "adoc",
+});
+
+console.log(outputContentWithAdoc);
+```
+
+## Core API Overview
+
+- `convert(options)` — Converts an input file to AsciiDoc and can pipe the result to Markdown or plain text via the AsciiDoc render step; defined in `src/converter.ts`.
+- `ConvertOptions` — Public input contract for `convert`, requiring `input` and optionally `type`; defined in `src/converter.ts`.
+- `src/index.ts` — Public package entrypoint that re-exports `convert` and `ConvertOptions` for ESM consumers.
+- `bin/cli.js` / `src/cli.ts` — CLI wrapper that accepts `-i/--input`, `-o/--output`, `-t/--type`, `-f/--force`, `-v/--version`, and `-h/--help`.
+- Format adapters — Native converters handle PDF, DOC/DOCX, CSV/TSV, XLS/XLSX/ODS, HTML, JSON/YAML/TOML/XML, Markdown, ODT, and RTF, with Pandoc selected when available for additional formats.
+
+### Common Mistakes to Avoid
+
+- Mistake: passing a path relative to the wrong working directory. Correct usage: resolve against `process.cwd()` or pass an absolute path before calling `convert`.
+
+```typescript
+import path from "node:path";
+
+const outputContentWithMarkdown = await convert({
+ input: path.resolve("./docs/report.pdf"),
+ type: "markdown",
+});
+```
+
+- Mistake: treating `type: "txt"` as a bypass. The library still converts input to AsciiDoc first, then renders to plain text.
+
+```typescript
+const outputContentWithPlainText = await convert({
+ input: "./notes.md",
+ type: "text",
+});
+```
+
+- Mistake: assuming every exotic format works without Pandoc. For `.latex`, `.rst`, `.org`, `.wiki`, and similar inputs, install Pandoc or use a supported native format.
+
+```typescript
+const asAsciiDoc = await convert({
+ input: "./guide.rst",
+ type: "adoc",
+});
+```

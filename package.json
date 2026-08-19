@@ -41,8 +41,10 @@
 		}
 	},
 	"files": [
+		"bin",
 		"dist",
-		"bin"
+		"llms-full.txt",
+		"llms.txt"
 	],
 	"homepage": "https://github.com/r37r0m0d3l/doc-to-adoc#readme",
 	"keywords": [
@@ -101,5 +103,5 @@
 	},
 	"type": "module",
 	"types": "./dist/index.d.ts",
-	"version": "1.1.0"
+	"version": "1.1.1"
 }

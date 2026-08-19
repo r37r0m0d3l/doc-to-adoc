@@ -1,13 +1,11 @@
 import assert from "node:assert";
-import fs from "node:fs";
 import { describe, test } from "node:test";
-import { convertPdfToAdoc } from "../../dist/index.js";
+import { convert } from "../../dist/index.js";
 
 describe("NPM: PDF to AsciiDoc", () => {
-	test("should convert PDF buffer to AsciiDoc", async () => {
+	test("should convert PDF file to AsciiDoc via the public API", async () => {
 		const pdfPath = "test/docs/sample.pdf";
-		const buffer = fs.readFileSync(pdfPath);
-		const content = await convertPdfToAdoc(buffer);
+		const content = await convert({ input: pdfPath });
 
 		assert.ok(content.includes("= Sample PDF"), "Missing title");
 		assert.ok(content.includes("Created for testing PDFObject"), "Missing content text");

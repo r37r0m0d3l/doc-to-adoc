@@ -1,13 +1,2 @@
-export * from "./converter.js";
-export * from "./util/convert-csv.util.js";
-export * from "./util/convert-doc.util.js";
-export * from "./util/convert-docx.util.js";
-export * from "./util/convert-html.util.js";
-export * from "./util/convert-image.util.js";
-export * from "./util/convert-markdown.util.js";
-export * from "./util/convert-odt.util.js";
-export * from "./util/convert-pdf.util.js";
-export * from "./util/convert-rtf.util.js";
-export * from "./util/convert-spreadsheet.util.js";
-export * from "./util/convert-structured.util.js";
-export * from "./util/pandoc.util.js";
+export type { ConvertOptions } from "./converter.js";
+export { convert } from "./converter.js";

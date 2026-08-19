@@ -183,7 +183,7 @@ async function convertNativeFallback(inputFile: string, ext: string): Promise<st
 	}
 }
 
-export async function getAdocContent(inputFile: string, ext: string): Promise<string> {
+async function getAdocContent(inputFile: string, ext: string): Promise<string> {
 	const hasPandoc = isPandocAvailable();
 	if (hasPandoc && PANDOC_PRIMARY_FORMATS[ext]) {
 		const format = PANDOC_PRIMARY_FORMATS[ext];

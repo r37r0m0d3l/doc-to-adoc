@@ -1,9 +1,18 @@
 import assert from "node:assert";
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
 import { describe, test } from "node:test";
-import { convertStructuredDataToAdoc } from "../../dist/index.js";
+import { convert } from "../../dist/index.js";
+
+function writeTempFile(extension, content) {
+	const filePath = path.join(fs.mkdtempSync(path.join(os.tmpdir(), "doc-to-adoc-")), `sample${extension}`);
+	fs.writeFileSync(filePath, content, "utf-8");
+	return filePath;
+}
 
 describe("NPM: JSON to AsciiDoc", () => {
-	test("should convert JSON to AsciiDoc tree", () => {
+	test("should convert JSON to AsciiDoc tree", async () => {
 		const jsonContent = JSON.stringify({
 			name: "Alice",
 			age: 30,
@@ -12,8 +21,8 @@ describe("NPM: JSON to AsciiDoc", () => {
 				zip: "10001",
 			},
 		});
-
-		const result = convertStructuredDataToAdoc(jsonContent, "json");
+		const tempFile = writeTempFile(".json", jsonContent);
+		const result = await convert({ input: tempFile });
 
 		assert.ok(result.includes("* *name:* Alice"), "Missing name");
 		assert.ok(result.includes("* *age:* 30"), "Missing age");
