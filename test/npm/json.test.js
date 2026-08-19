@@ -1,6 +1,6 @@
 import assert from "node:assert";
 import { describe, test } from "node:test";
-import { convertStructuredDataToAdoc } from "../../bin/converter.js";
+import { convertStructuredDataToAdoc } from "../../dist/index.js";
 
 describe("NPM: JSON to AsciiDoc", () => {
 	test("should convert JSON to AsciiDoc tree", () => {

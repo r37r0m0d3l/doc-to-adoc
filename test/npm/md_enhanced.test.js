@@ -1,6 +1,6 @@
 import assert from "node:assert";
 import { describe, test } from "node:test";
-import { mdToAdoc } from "../../bin/converter.js";
+import { mdToAdoc } from "../../dist/index.js";
 
 describe("NPM: Enhanced Markdown to AsciiDoc", () => {
 	test("should convert unordered lists", () => {
@@ -27,11 +27,12 @@ describe("NPM: Enhanced Markdown to AsciiDoc", () => {
 		assert.ok(adoc.includes("https://google.com[Google]"), "Link failed");
 	});
 
-	test("should convert images", () => {
-		const mdContent = "![Alt text](image.png)";
+	test("should handle links and images with special replacement patterns ($1, $2, $&)", () => {
+		const mdContent = "[Product](https://example.com/item?price=$10&currency=$$USD)\n![Diagram](https://example.com/img.png?rev=$1)";
 		const adoc = mdToAdoc(mdContent);
 
-		assert.ok(adoc.includes("image:image.png[Alt text]"), "Image failed");
+		assert.ok(adoc.includes("https://example.com/item?price=$10&currency=$$USD[Product]"), "Link with $ failed");
+		assert.ok(adoc.includes("image:https://example.com/img.png?rev=$1[Diagram]"), "Image with $ failed");
 	});
 
 	test("should convert blockquotes", () => {
@@ -39,6 +40,13 @@ describe("NPM: Enhanced Markdown to AsciiDoc", () => {
 		const adoc = mdToAdoc(mdContent);
 
 		assert.ok(adoc.includes("[quote]\n____\nThis is a quote\n____"), "Blockquote failed");
+	});
+
+	test("should convert multi-paragraph and nested blockquotes cleanly", () => {
+		const mdContent = "> First paragraph\n>\n> Second paragraph";
+		const adoc = mdToAdoc(mdContent);
+
+		assert.ok(adoc.includes("[quote]\n____\nFirst paragraph\n\nSecond paragraph\n____"), "Multi-paragraph blockquote failed");
 	});
 
 	test("should convert horizontal rules", () => {

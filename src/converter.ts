@@ -4,282 +4,179 @@ import fs from "node:fs/promises";
 import * as path from "node:path";
 
 import { convert as convertAdoc } from "@asciidoctor/core";
-import { parse as parseCsv } from "csv-parse/sync";
-import { XMLParser } from "fast-xml-parser";
-import * as yaml from "js-yaml";
-import mammoth from "mammoth";
-import { PDFParse } from "pdf-parse";
-import { parse as parseToml } from "smol-toml";
+import pandocPath from "pandoc-binary";
 import TurndownService from "turndown";
-import { utils as excelUtils, read as readExcel } from "xlsx";
+import { gfm } from "turndown-plugin-gfm";
 
-// Initialize persistent parsers
-const xmlParser = new XMLParser({ ignoreAttributes: false });
+import { convertCsvToAdoc } from "./util/convert-csv.util.js";
+import { convertDocToAdoc } from "./util/convert-doc.util.js";
+import { convertDocxToAdoc } from "./util/convert-docx.util.js";
+import { convertHtmlToAdoc } from "./util/convert-html.util.js";
+import { convertImageToAdoc } from "./util/convert-image.util.js";
+import { mdToAdoc } from "./util/convert-markdown.util.js";
+import { convertOdtToAdoc } from "./util/convert-odt.util.js";
+import { convertPdfToAdoc } from "./util/convert-pdf.util.js";
+import { convertRtfToAdoc } from "./util/convert-rtf.util.js";
+import { convertSpreadsheetToAdoc } from "./util/convert-spreadsheet.util.js";
+import { convertStructuredDataToAdoc } from "./util/convert-structured.util.js";
+import { isPandocAvailable } from "./util/pandoc.util.js";
+
+//#region File Formats
+const EXTENSIONS_NATIVE = {
+	"APNG": ".apng",
+	"BMP": ".bmp",
+	"CSV": ".csv",
+	"DOC": ".doc",
+	"DOCX": ".docx",
+	"GIF": ".gif",
+	"HTM": ".htm",
+	"HTML": ".html",
+	"JPEG": ".jpeg",
+	"JPG": ".jpg",
+	"JSON": ".json",
+	"MARKDOWN": ".markdown",
+	"MD": ".md",
+	"MDC": ".mdc",
+	"MDX": ".mdx",
+	"ODF": ".odf",
+	"ODS": ".ods",
+	"ODT": ".odt",
+	"PBM": ".pbm",
+	"PDF": ".pdf",
+	"PNG": ".png",
+	"RTF": ".rtf",
+	"TIF": ".tif",
+	"TIFF": ".tiff",
+	"TOML": ".toml",
+	"TSV": ".tsv",
+	"WEBP": ".webp",
+	"XLS": ".xls",
+	"XLSX": ".xlsx",
+	"XML": ".xml",
+	"YAML": ".yaml",
+	"YML": ".yml",
+} as const;
+
+Object.freeze(EXTENSIONS_NATIVE);
+
+const EXTENSIONS_PANDOC = {
+	"LATEX": ".latex",
+	"MEDIAWIKI": ".mediawiki",
+	"ORG": ".org",
+	"RST": ".rst",
+	"TEX": ".tex",
+	"TYP": ".typ",
+	"WIKI": ".wiki",
+};
+
+Object.freeze(EXTENSIONS_PANDOC);
+
+const EXTENSIONS_SUPPORTED = {
+	...EXTENSIONS_NATIVE,
+	...EXTENSIONS_PANDOC,
+} as const;
+
+Object.freeze(EXTENSIONS_SUPPORTED);
+
+// export type ExtensionNativeKeyType = keyof typeof EXTENSIONS_NATIVE;
+// export type ExtensionNativeValueType = (typeof EXTENSIONS_NATIVE)[ExtensionNativeKeyType];
+
+// export type ExtensionPandocKeyType = keyof typeof EXTENSIONS_PANDOC;
+// export type ExtensionPandocValueType = (typeof EXTENSIONS_PANDOC)[ExtensionPandocKeyType];
+
+// export type ExtensionSupportedKeyType = keyof typeof EXTENSIONS_SUPPORTED;
+// export type ExtensionSupportedValueType = (typeof EXTENSIONS_SUPPORTED)[ExtensionSupportedKeyType];
+//#endregion File Formats
 
 /**
  * Map of extensions that Pandoc excels at converting natively.
  */
-export const PANDOC_PRIMARY_FORMATS: Record<string, string> = {
-	".htm": "html",
-	".html": "html",
-	".latex": "latex",
-	".markdown": "markdown",
-	".md": "markdown",
-	".mdx": "markdown",
-	".mediawiki": "mediawiki",
-	".odf": "odt",
-	".odt": "odt",
-	".org": "org",
-	".rst": "rst",
-	".rtf": "rtf",
-	".tex": "latex",
-	".wiki": "mediawiki",
-};
-
-export function isPandocAvailable(): boolean {
-	try {
-		const res = spawnSync("pandoc", ["--version"], { stdio: "ignore" });
-		return res.status === 0 && !res.error;
-	} catch {
-		return false;
-	}
-}
-
-// ---------------------------------------------------------------------------
-// Native TS Converters (Handles formats Pandoc can't read or handle cleanly)
-// ---------------------------------------------------------------------------
-
-// 1. PDF Conversion (pdf-parse)
-export async function convertPdfToAdoc(buffer: Buffer): Promise<string> {
-	const parser = new PDFParse({ data: buffer });
-	try {
-		const info = await parser.getInfo();
-		const title = info.info?.Title?.trim();
-		const result = await parser.getText();
-
-		if (title) {
-			return `= ${title}\n\n${result.text}`;
-		}
-
-		return result.text;
-	} finally {
-		await parser.destroy();
-	}
-}
-
-// 2. DOC / DOCX Extraction (mammoth)
-export async function convertDocxToAdoc(buffer: Buffer): Promise<string> {
-	// biome-ignore lint/suspicious/noExplicitAny: No exported type
-	const { value: markdown } = await (mammoth as any).convertToMarkdown({ buffer });
-	return mdToAdoc(markdown);
-}
-
-// 3. Tabular Conversion (CSV / TSV)
-export function convertCsvToAdoc(content: string, delimiter = ","): string {
-	const records: string[][] = parseCsv(content, { skip_empty_lines: true, delimiter });
-	if (records.length === 0) return "";
-
-	const headers = records[0];
-	const rows = records.slice(1);
-
-	let adoc = '[options="header"]\n|===\n';
-	adoc += `| ${headers.map((h) => String(h).replace(/\|/g, "\\|")).join(" | ")}\n\n`;
-
-	for (const row of rows) {
-		adoc += `| ${row.map((cell) => String(cell).replace(/\|/g, "\\|")).join(" | ")}\n`;
-	}
-	adoc += "|===\n";
-	return adoc;
-}
-
-// 4. Excel / ODS Conversion (xlsx)
-export function convertSpreadsheetToAdoc(buffer: Buffer): string {
-	const workbook = readExcel(buffer);
-	const firstSheetName = workbook.SheetNames[0];
-	if (!firstSheetName) return "";
-
-	const sheet = workbook.Sheets[firstSheetName];
-	const csvData = excelUtils.sheet_to_csv(sheet);
-	return convertCsvToAdoc(csvData, ",");
-}
-
-// 5. HTML Conversion (turndown)
-export function convertHtmlToAdoc(content: string): string {
-	const cleanedHtml = content
-		.replace(/<head[^>]*>[\s\S]*?<\/head>/gi, "")
-		.replace(/<style[^>]*>[\s\S]*?<\/style>/gi, "")
-		.replace(/<script[^>]*>[\s\S]*?<\/script>/gi, "");
-
-	const turndownService = new TurndownService({ headingStyle: "atx" });
-	const markdown = turndownService.turndown(cleanedHtml);
-	return mdToAdoc(markdown);
-}
-
-// 6. Structured Data / XML Conversion (fast-xml-parser / JSON)
-export function convertStructuredDataToAdoc(content: unknown, format: "json" | "yaml" | "toml" | "xml"): string {
-	let parsed = content;
-
-	if (typeof content === "string") {
-		try {
-			if (format === "json") parsed = JSON.parse(content);
-			else if (format === "yaml") parsed = yaml.load(content);
-			else if (format === "toml") parsed = parseToml(content);
-			else if (format === "xml") parsed = xmlParser.parse(content);
-		} catch {
-			return `[source,${format}]\n----\n${content.trim()}\n----\n`;
-		}
-	}
-
-	if (typeof parsed !== "object" || parsed === null) {
-		return `[source,${format}]\n----\n${String(parsed).trim()}\n----\n`;
-	}
-	return objectToAdocTree(parsed as Record<string, unknown>);
-}
-
-// Helper to convert JS Objects into recursive AsciiDoc bullet trees
-export function objectToAdocTree(obj: Record<string, unknown>, depth = 1): string {
-	let adoc = "";
-	const prefix = "*".repeat(depth);
-
-	for (const [key, val] of Object.entries(obj)) {
-		if (typeof val === "object" && val !== null) {
-			adoc += `${prefix} *${key}:*\n`;
-			adoc += objectToAdocTree(val as Record<string, unknown>, depth + 1);
-		} else {
-			adoc += `${prefix} *${key}:* ${val}\n`;
-		}
-	}
-	return adoc;
-}
-
-// Native Markdown Fallback
-export function mdToAdoc(content: string): string {
-	const codeBlocks: string[] = [];
-	let adoc = content;
-
-	// 1. Protect code blocks
-	adoc = adoc.replace(/```(\w*)\r?\n([\s\S]*?)```/g, (_, lang: string, code: string) => {
-		const placeholder = `§CODEBLOCK${codeBlocks.length}§`;
-		codeBlocks.push(`${lang ? `[source,${lang}]\n` : "[source]\n"}----\n${code.trim()}\n----\n`);
-		return placeholder;
-	});
-
-	// 2. Horizontal Rules (Must be before Bold/Italic to avoid corruption)
-	adoc = adoc.replace(/^[*+_-]{3,}$/gm, "'''");
-
-	// 3. Bold & Italic (using placeholders to avoid interference with other rules)
-	adoc = adoc.replace(/(\*\*\*|___)(.*?)\1/g, "§BI§$2§BI§"); // Bold-Italic
-	adoc = adoc.replace(/(\*\*|__)(.*?)\1/g, "§B§$2§B§"); // Bold
-	adoc = adoc.replace(/(\*|_)(.*?)\1/g, "§I§$2§I§"); // Italic
-
-	// 4. Headers (handling optional anchors from Mammoth)
-	adoc = adoc.replace(/^(?:<a id=".*"><\/a>)?######\s+(.*)$/gm, "====== $1");
-	adoc = adoc.replace(/^(?:<a id=".*"><\/a>)?#####\s+(.*)$/gm, "===== $1");
-	adoc = adoc.replace(/^(?:<a id=".*"><\/a>)?####\s+(.*)$/gm, "==== $1");
-	adoc = adoc.replace(/^(?:<a id=".*"><\/a>)?###\s+(.*)$/gm, "=== $1");
-	adoc = adoc.replace(/^(?:<a id=".*"><\/a>)?##\s+(.*)$/gm, "== $1");
-	adoc = adoc.replace(/^(?:<a id=".*"><\/a>)?#\s+(.*)$/gm, "= $1");
-
-	// 5. Blockquotes
-	adoc = adoc.replace(/(^>.*\n?)+/gm, (match) => {
-		const lines = match
-			.split("\n")
-			.map((line) => line.replace(/^>\s?/, ""))
-			.filter((line) => line.length > 0)
-			.join("\n");
-		return `[quote]\n____\n${lines}\n____\n\n`;
-	});
-
-	// 6. Lists
-	// Unordered lists
-	adoc = adoc.replace(/^[ \t]*[-*+]\s+(.*)$/gm, "* $1");
-	// Ordered lists
-	adoc = adoc.replace(/^[ \t]*\d+\.\s+(.*)$/gm, ". $1");
-
-	// 7. Tables (Basic GFM support)
-	adoc = adoc.replace(/^(\|.*\|)\r?\n\|(?:[ \t]*:?-+:?[ \t]*\|)+\r?\n((\|.*\|\r?\n?)*)/gm, (_match, headerLine, body) => {
-		const parseRow = (row: string) =>
-			row
-				.split("|")
-				.filter((_, i, arr) => i > 0 && i < arr.length - 1)
-				.map((c) => c.trim());
-		const headers = parseRow(headerLine);
-		const rows = body.trim().split("\n").map(parseRow);
-
-		let table = '[options="header"]\n|===\n';
-		table += `| ${headers.join(" | ")}\n`;
-		for (const row of rows) {
-			table += `| ${row.join(" | ")}\n`;
-		}
-		table += "|===\n";
-		return table;
-	});
-
-	// 8. Images & Links
-	// Images first
-	adoc = adoc.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, "image:$2[$1]");
-	// Links
-	adoc = adoc.replace(/\[([^\]]+)\]\(([^)]+)\)/g, "$2[$1]");
-
-	// 9. Restore Bold & Italic
-	adoc = adoc.replace(/§BI§/g, "***");
-	adoc = adoc.replace(/§B§/g, "*");
-	adoc = adoc.replace(/§I§/g, "_");
-
-	// 10. Restore code blocks
-	codeBlocks.forEach((block, i) => {
-		adoc = adoc.replace(`§CODEBLOCK${i}§`, block);
-	});
-
-	return adoc.trim();
-}
+const PANDOC_PRIMARY_FORMATS = {
+	[EXTENSIONS_SUPPORTED.HTML]: "html",
+	[EXTENSIONS_SUPPORTED.HTM]: "html",
+	[EXTENSIONS_SUPPORTED.LATEX]: "latex",
+	[EXTENSIONS_SUPPORTED.MARKDOWN]: "markdown",
+	[EXTENSIONS_SUPPORTED.MDC]: "markdown",
+	[EXTENSIONS_SUPPORTED.MDX]: "markdown",
+	[EXTENSIONS_SUPPORTED.MD]: "markdown",
+	[EXTENSIONS_SUPPORTED.MEDIAWIKI]: "mediawiki",
+	[EXTENSIONS_SUPPORTED.ODF]: "odt",
+	[EXTENSIONS_SUPPORTED.ODT]: "odt",
+	[EXTENSIONS_SUPPORTED.ORG]: "org",
+	[EXTENSIONS_SUPPORTED.RST]: "rst",
+	[EXTENSIONS_SUPPORTED.RTF]: "rtf",
+	[EXTENSIONS_SUPPORTED.TEX]: "latex",
+	[EXTENSIONS_SUPPORTED.WIKI]: "mediawiki",
+} as const;
 
 // ---------------------------------------------------------------------------
 // Master Dispatcher
 // ---------------------------------------------------------------------------
-export async function convertNativeFallback(inputFile: string, ext: string): Promise<string> {
+async function convertNativeFallback(inputFile: string, ext: string): Promise<string> {
 	const fileBuffer = await fs.readFile(inputFile);
 	const utf8Text = fileBuffer.toString("utf-8");
 
 	switch (ext.toLowerCase()) {
-		// 1. PDF
-		case ".pdf":
+		// 1. PDF & Images (OCR fallback)
+		case EXTENSIONS_SUPPORTED.PDF:
 			return convertPdfToAdoc(fileBuffer);
 
-		// 2. Word Documents (Mammoth only supports .docx)
-		case ".docx":
+		case EXTENSIONS_SUPPORTED.APNG:
+		case EXTENSIONS_SUPPORTED.BMP:
+		case EXTENSIONS_SUPPORTED.GIF:
+		case EXTENSIONS_SUPPORTED.JPEG:
+		case EXTENSIONS_SUPPORTED.JPG:
+		case EXTENSIONS_SUPPORTED.PBM:
+		case EXTENSIONS_SUPPORTED.PNG:
+		case EXTENSIONS_SUPPORTED.TIF:
+		case EXTENSIONS_SUPPORTED.TIFF:
+		case EXTENSIONS_SUPPORTED.WEBP:
+			return convertImageToAdoc(fileBuffer);
+
+		// 2. Word Documents
+		case EXTENSIONS_SUPPORTED.DOC:
+			return convertDocToAdoc(fileBuffer);
+		case EXTENSIONS_SUPPORTED.DOCX:
 			return convertDocxToAdoc(fileBuffer);
 
 		// 3. Tabular Data
-		case ".csv":
+		case EXTENSIONS_SUPPORTED.CSV:
 			return convertCsvToAdoc(utf8Text, ",");
-		case ".tsv":
+		case EXTENSIONS_SUPPORTED.TSV:
 			return convertCsvToAdoc(utf8Text, "\t");
-		case ".xlsx":
-		case ".ods":
+		case EXTENSIONS_SUPPORTED.XLSX:
+		case EXTENSIONS_SUPPORTED.ODS:
 			return convertSpreadsheetToAdoc(fileBuffer);
 
 		// 4. HTML
-		case ".html":
-		case ".htm":
+		case EXTENSIONS_SUPPORTED.HTML:
+		case EXTENSIONS_SUPPORTED.HTM:
 			return convertHtmlToAdoc(utf8Text);
 
 		// 5. Structured Data & Configs
-		case ".json":
-			return convertStructuredDataToAdoc(JSON.parse(utf8Text), "json");
-		case ".yaml":
-		case ".yml":
-			return convertStructuredDataToAdoc(yaml.load(utf8Text), "yaml");
-		case ".toml":
-			return convertStructuredDataToAdoc(parseToml(utf8Text), "toml");
-		case ".xml":
-			return convertStructuredDataToAdoc(xmlParser.parse(utf8Text), "xml");
+		case EXTENSIONS_SUPPORTED.JSON:
+			return convertStructuredDataToAdoc(utf8Text, "json");
+		case EXTENSIONS_SUPPORTED.YAML:
+		case EXTENSIONS_SUPPORTED.YML:
+			return convertStructuredDataToAdoc(utf8Text, "yaml");
+		case EXTENSIONS_SUPPORTED.TOML:
+			return convertStructuredDataToAdoc(utf8Text, "toml");
+		case EXTENSIONS_SUPPORTED.XML:
+			return convertStructuredDataToAdoc(utf8Text, "xml");
 
 		// 6. Markdown Light Fallbacks
-		case ".md":
-		case ".markdown":
-		case ".mdx":
+		case EXTENSIONS_SUPPORTED.MD:
+		case EXTENSIONS_SUPPORTED.MARKDOWN:
+		case EXTENSIONS_SUPPORTED.MDX:
+		case EXTENSIONS_SUPPORTED.MDC:
 			return mdToAdoc(utf8Text);
+
+		// 7. ODT & RTF
+		case EXTENSIONS_SUPPORTED.ODF:
+		case EXTENSIONS_SUPPORTED.ODT:
+			return convertOdtToAdoc(inputFile);
+		case EXTENSIONS_SUPPORTED.RTF:
+			return convertRtfToAdoc(inputFile);
 
 		default:
 			return utf8Text;
@@ -294,11 +191,15 @@ export async function getAdocContent(inputFile: string, ext: string): Promise<st
 		if (format) {
 			args.unshift("-f", format);
 		}
-		const result = spawnSync("pandoc", args, { encoding: "utf-8" });
-		if (result.status === 0) return result.stdout;
+		const result = spawnSync(pandocPath, args, { encoding: "utf-8" });
+		if (result.status === 0) {
+			return result.stdout;
+		}
 
-		const retry = spawnSync("pandoc", [inputFile, "-t", "asciidoc"], { encoding: "utf-8" });
-		if (retry.status === 0) return retry.stdout;
+		const retry = spawnSync(pandocPath, [inputFile, "-t", "asciidoc"], { encoding: "utf-8" });
+		if (retry.status === 0) {
+			return retry.stdout;
+		}
 	}
 
 	return convertNativeFallback(inputFile, ext);
@@ -312,7 +213,7 @@ export interface ConvertOptions {
 	 */
 	input: string;
 	/**
-	 * @anme type
+	 * @name type
 	 * @description Pipe to type: AsciiDoc -> Markdown, AsciiDoc -> plain text
 	 * @type string
 	 */
@@ -320,7 +221,10 @@ export interface ConvertOptions {
 }
 
 export async function convert(options: ConvertOptions): Promise<string> {
-	const { input, type = "adoc" } = options;
+	const {
+		input,
+		type = "adoc", // defaults to
+	} = options;
 	const resolvedInput = path.resolve(process.cwd(), input);
 	if (!existsSync(resolvedInput)) {
 		throw new Error(`File not found "${resolvedInput}"`);
@@ -331,13 +235,15 @@ export async function convert(options: ConvertOptions): Promise<string> {
 
 	// PIPELINE: adoc -> markdown / text
 	if (type === "md" || type === "markdown") {
-		const html = await convertAdoc(result, { attributes: { doctype: "book" } });
+		const html = await convertAdoc(result, { attributes: { doctype: "book" }, standalone: false });
 		const turndownService = new TurndownService({ headingStyle: "atx" });
-		result = turndownService.turndown(html as string);
+		turndownService.use(gfm);
+		result = turndownService.turndown(typeof html === "string" ? html : String(html ?? ""));
 	} else if (type === "txt" || type === "text") {
-		const html = await convertAdoc(result, { attributes: { doctype: "book" } });
+		const html = await convertAdoc(result, { attributes: { doctype: "book" }, standalone: false });
+		const htmlStr = typeof html === "string" ? html : String(html ?? "");
 		// Simple HTML to text conversion
-		result = (html as string)
+		result = htmlStr
 			.replace(/<style[^>]*>[\s\S]*?<\/style>/gi, "")
 			.replace(/<script[^>]*>[\s\S]*?<\/script>/gi, "")
 			.replace(/\r?\n/g, " ")

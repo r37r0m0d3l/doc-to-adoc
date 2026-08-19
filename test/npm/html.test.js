@@ -1,6 +1,6 @@
 import assert from "node:assert";
 import { describe, test } from "node:test";
-import { convertHtmlToAdoc } from "../../bin/converter.js";
+import { convertHtmlToAdoc } from "../../dist/index.js";
 
 describe("NPM: HTML to AsciiDoc", () => {
 	test("should convert basic HTML to AsciiDoc", () => {

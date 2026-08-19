@@ -10,7 +10,7 @@
 	},
 	"files": {
 		"ignoreUnknown": false,
-		"includes": ["**", "!**/bin/*.*", "!**/test/docs/*.*", "!**/node_modules/*.*"]
+		"includes": ["**", "!**/bin", "!**/dist", "!**/test/docs", "!**/node_modules"]
 	},
 	"formatter": {
 		"attributePosition": "multiline",

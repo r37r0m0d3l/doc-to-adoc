@@ -1,6 +1,6 @@
 import assert from "node:assert";
 import { describe, test } from "node:test";
-import { convertCsvToAdoc } from "../../bin/converter.js";
+import { convertCsvToAdoc } from "../../dist/index.js";
 
 describe("NPM: CSV to AsciiDoc", () => {
 	test("should convert basic CSV to AsciiDoc table", () => {

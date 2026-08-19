@@ -1,82 +1,32 @@
 # doc-to-adoc 📄➡️📝
 
-> Universal utility (CLI & Library) to convert document and structured data formats into canonical **AsciiDoc (`.adoc`)**.
+> Universal CLI and Library to convert document, markup, image, and structured data formats into canonical **AsciiDoc (`.adoc`)**.
 
-Designed as a single-command ingestion engine for technical writers, local LLM RAG pipelines, and document processing
-workflows.
+
+Designed as a single-command ingestion engine for technical documentation, local LLM RAG pipelines, and automated document conversion workflows.
 
 ## Features
 
-- ⚙️ **Smart Pandoc Detection:** Automatically uses system `pandoc` when present, with native fallback logic
-  for complex formats (PDF, DOCX, XLSX, etc.).
-- 📦 **Zero-Setup ESM:** Transpiled for Node.js ESM and TypeScript.
-- 🚀 **Supported Input Formats:**
-    - **Documents:** PDF, DOC, DOCX, RTF, ODT (ODF), HTML, TEX (LaTeX)
-    - **Markup:** Markdown (MD, MDX), AsciiDoc (re-processing), MediaWiki, Org-mode, ReStructuredText (RST)
-    - **Data:** JSON, YAML, TOML, XML, CSV, TSV, XLSX (Excel), ODS
+- 📦 **Zero-Setup ESM:** Ready for Node.js ESM and TypeScript.
+- ⚗️ **Unified Pipeline:** Single dependency for RAG context extraction and document conversion—no complex external dependencies required.
+- 🚀 **Extensive Format Support:** Ingest documents, tabular data, markup, and image text seamlessly.
+
+## Supported Formats
+
+| Category         | Extensions                                                                                         |
+|:-----------------|:---------------------------------------------------------------------------------------------------|
+| **Documents**    | `.doc`, `.docx`, `.pdf`, `.rtf`, `.odf`, `.odt`, `.latex`, `.tex`                                  |
+| **Data**         | `.csv`, `.json`, `.ods`, `.tsv`, `.xls`, `.xlsx`, `.xml`, `.yaml`, `.yml`, `.toml`                 |
+| **Markup**       | `.htm`, `.html`, `.md`, `.markdown`, `.mdc`, `.mdx`, `.mediawiki`, `.org`, `.rst`, `.typ`, `.wiki` |
+| **Images (OCR)** | `.apng`, `.bmp`, `.gif`, `.jpeg`, `.jpg`, `.pbm`, `.png`, `.tif`, `.tiff`, `.webp`                 |
 
 ## 🚀 Usage
 
-### Prerequisites: Pandoc Installation
+When choosing a markup format for technical writing, LLM RAG pipelines, or general documentation, **AsciiDoc**, **Markdown**, and **Plain Text** sit at distinct points along the spectrum of complexity versus functionality.
 
-This is **NOT REQUIRED** but **HIGHLY RECOMMENDED**. This package utilizes system-installed **[Pandoc](https://pandoc.org/)** when available to process document conversions. While basic features may run without it, installing **Pandoc** enables **full functionality and potential** when converting document-like formats.
-
-<details>
-    <summary><b>🐧 Linux</b></summary>
-
-Install via your distribution's standard package manager:
-
-**Alpine:**
-
-```bash
-apk add pandoc
-```
-
-**Arch Linux:**
-
-```bash
-sudo pacman -S pandoc
-```
-
-**Debian / Ubuntu:**
-
-```bash
-sudo apt-get update
-sudo apt-get install -y pandoc
-```
-
-</details>
-
-<details>
-    <summary><b>🍏 macOS</b></summary>
-
-Install using <b>Homebrew</b>:
-
-```shell
-brew install pandoc
-```
-
-</details>
-
-<details>
-    <summary><b>🪟 Windows</b></summary>
-
-Install using <b>WinGet</b>:
-
-```powershell
-winget install JohnMacFarlane.Pandoc
-```
-
-</details>
-
-<details>
-    <summary><b>✅ Verifying installation</b></summary>
-
-```bash
-pandoc --version
-```
-
-</details>
+- Use **AsciiDoc** when building **structured**, technical documentation or LLM ingestion pipelines where explicit **semantic metadata** are **critical**.
+- Use **Markdown** for lightweight, **human-facing** docs where **universal rendering** matters most.
+- Use **Plain Text** only when structural context is **completely unnecessary**.
 
 ### Node.js Usage
 
@@ -85,7 +35,7 @@ import { convert } from 'doc-to-adoc';
 
 const content = await convert({
   input: './my.docx',
-  type: 'adoc' // optional: 'adoc', 'md', 'txt'
+  type: 'adoc' // Options: 'adoc' | 'md' | 'txt'
 });
 console.log(content);
 ```
