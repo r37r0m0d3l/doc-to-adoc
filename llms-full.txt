@@ -3,13 +3,13 @@
 ## Deep Dive Architecture
 `doc-to-adoc` is built around a single public entrypoint, `convert()`, exported from `src/index.ts` and implemented in `src/converter.ts`. The runtime flow is:
 
-1. Resolve `input` relative to `process.cwd()`.
+1. Resolve `inputFilePath` relative to `process.cwd()`.
 2. Validate the file exists; otherwise throw `new Error('File not found "..."')`.
 3. Detect the file extension and route to `getAdocContent()`.
-4. If Pandoc is available and the extension matches a primary Pandoc format, run `pandoc <input> -f <format> -t asciidoc` and use the stdout result.
+4. If Pandoc is available and the extension matches a primary Pandoc format, run `pandoc <inputFilePath> -f <format> -t asciidoc` and use the stdout result.
 5. Otherwise, use `convertNativeFallback()`, which dispatches by file type to specialized converters for PDF, images, Word docs, spreadsheets, HTML, structured data, Markdown, ODT, and RTF.
-6. If the caller requests `type` of `md`/`markdown`, convert the AsciiDoc output through Asciidoctor to HTML and then through Turndown to Markdown.
-7. If the caller requests `type` of `txt`/`text`, convert the AsciiDoc output through Asciidoctor to HTML and then strip tags and inline markup into plain text.
+6. If the caller requests `toFormat` of `md`/`markdown`, convert the AsciiDoc output through Asciidoctor to HTML and then through Turndown to Markdown.
+7. If the caller requests `toFormat` of `txt`/`text`, convert the AsciiDoc output through Asciidoctor to HTML and then strip tags and inline markup into plain text.
 
 The library is intentionally narrow: it does not expose a reducer or CLI-config abstraction beyond the public `ConvertOptions` contract. It reads no environment variables directly from `process.env`; its behavior is driven by the filesystem and presence of the `pandoc` binary, when applicable.
 
@@ -21,8 +21,11 @@ The library is intentionally narrow: it does not expose a reducer or CLI-config 
 
 ### Configuration and CLI options
 Public library configuration is defined by the exported interface `ConvertOptions` in `src/converter.ts`:
-- `input: string` — required a file path to read.
-- `type?: string | "markdown" | "md" | "text" | "txt"` — optional output mode; default is `"adoc"`.
+- `inputFilePath?: string | Buffer | URL` — optional file path, URL, or binary payload input.
+- `inputString?: string` — direct string content input.
+- `inputBuffer?: Buffer | Uint8Array` — direct binary input.
+- `fromFormat?: string` — explicit input format hint.
+- `toFormat?: string | "markdown" | "md" | "text" | "txt"` — optional output mode; default is `"adoc"`.
 
 CLI configuration in `src/cli.ts`:
 - `-i, --input <file>`
@@ -44,16 +47,16 @@ export async function convert(options: ConvertOptions): Promise<string>;
 ```
 
 Parameters:
-- `options: ConvertOptions` — Input object containing a file path and optional output format.
+- `options: ConvertOptions` — Input object containing a file input and optional output format.
 
 Return type:
 - `Promise<string>` — The converted content as a string.
 
 Behavior:
-- Resolves the input path from `process.cwd()`.
+- Resolves the input path from `process.cwd()` when using `inputFilePath`.
 - Throws `Error` when the file does not exist.
 - Detects the input extension and routes to Pandoc or native converters.
-- Converts to Markdown or plain text only when `type` is `md`/`markdown` or `txt`/`text`.
+- Converts to Markdown or plain text only when `toFormat` is `md`/`markdown` or `txt`/`text`.
 - Returns AsciiDoc by default.
 
 Error conditions:
@@ -66,8 +69,8 @@ Example:
 import { convert } from "doc-to-adoc";
 
 const adoc = await convert({
-  input: "./report.pdf",
-  type: "adoc",
+  inputFilePath: "./report.pdf",
+  toFormat: "adoc",
 });
 
 console.log(adoc.slice(0, 200));
@@ -79,22 +82,28 @@ Defined in `src/converter.ts`.
 Signature:
 ```typescript
 export interface ConvertOptions {
-  input: string;
-  type?: string | "markdown" | "md" | "text" | "txt";
+  inputFilePath?: string | Buffer | URL;
+  inputString?: string;
+  inputBuffer?: Buffer | Uint8Array;
+  fromFormat?: string;
+  toFormat?: string | "markdown" | "md" | "text" | "txt";
 }
 ```
 
 Properties:
-- `input: string` — Required source file path.
-- `type?: ...` — Optional output format. Supported values include `adoc`, `asciidoc`, `md`, `markdown`, `txt`, `text`.
+- `inputFilePath?: string | Buffer | URL` — Optional source path, `URL`, or binary payload.
+- `inputString?: string` — Optional raw text input.
+- `inputBuffer?: Buffer | Uint8Array` — Optional direct binary input.
+- `fromFormat?: string` — Optional input format hint.
+- `toFormat?: ...` — Optional output format. Supported values include `adoc`, `asciidoc`, `md`, `markdown`, `txt`, `text`.
 
 Example:
 ```typescript
 import { convert, type ConvertOptions } from "doc-to-adoc";
 
 const opts: ConvertOptions = {
-  input: "./data.xlsx",
-  type: "text",
+  inputFilePath: "./data.xlsx",
+  toFormat: "text",
 };
 
 const output = await convert(opts);
@@ -133,25 +142,18 @@ Defined in `src/converter.ts`.
 Example:
 ```typescript
 // The library does this internally:
-const adoc = await convert({ input: "./input.html", type: "adoc" });
+const adoc = await convert({ inputFilePath: "./input.html", toFormat: "adoc" });
 ```
 
 ## Type Definitions
 
 ```typescript
 export interface ConvertOptions {
-  /**
-   * @name input
-   * @description Source file path
-   * @type string
-   */
-  input: string;
-  /**
-   * @name type
-   * @description Pipe to type: AsciiDoc -> Markdown, AsciiDoc -> plain text
-   * @type string
-   */
-  type?: string | "markdown" | "md" | "text" | "txt";
+ inputFilePath?: string | Buffer | URL;
+ inputString?: string;
+ inputBuffer?: Buffer | Uint8Array;
+ fromFormat?: string;
+ toFormat?: string | "markdown" | "md" | "text" | "txt";
 }
 ```
 

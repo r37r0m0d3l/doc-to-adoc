@@ -1,5 +1,9 @@
 # 📝 Changelog
 
+## [1.2.0]
+
+- ♻️ Extended the converter interface to accept raw string and Buffer inputs in addition to file paths.
+
 ## [1.1.1]
 
 ### Added
