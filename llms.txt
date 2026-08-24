@@ -6,8 +6,8 @@
 import { convert } from "doc-to-adoc";
 
 const outputContentWithAdoc = await convert({
-  input: "./my.docx",
-  type: "adoc",
+  inputFilePath: "./my.docx",
+  toFormat: "adoc",
 });
 
 console.log(outputContentWithAdoc);
@@ -16,8 +16,8 @@ console.log(outputContentWithAdoc);
 ## Core API Overview
 
 - `convert(options)` — Converts an input file to AsciiDoc and can pipe the result to Markdown or plain text via the AsciiDoc render step; defined in `src/converter.ts`.
-- `ConvertOptions` — Public input contract for `convert`, requiring `input` and optionally `type`; defined in `src/converter.ts`.
-- `src/index.ts` — Public package entrypoint that re-exports `convert` and `ConvertOptions` for ESM consumers.
+- `ConvertOptions` — Public input contract for `convert`, requiring `inputFilePath` and optionally `toFormat`; defined in `src/converter.ts`.
+- `src/index.ts` — Public package entrypoint that re-exports `convert`, `ConvertOptions` for ESM consumers.
 - `bin/cli.js` / `src/cli.ts` — CLI wrapper that accepts `-i/--input`, `-o/--output`, `-t/--type`, `-f/--force`, `-v/--version`, and `-h/--help`.
 - Format adapters — Native converters handle PDF, DOC/DOCX, CSV/TSV, XLS/XLSX/ODS, HTML, JSON/YAML/TOML/XML, Markdown, ODT, and RTF, with Pandoc selected when available for additional formats.
 
@@ -29,17 +29,17 @@ console.log(outputContentWithAdoc);
 import path from "node:path";
 
 const outputContentWithMarkdown = await convert({
- input: path.resolve("./docs/report.pdf"),
- type: "markdown",
+ inputFilePath: path.resolve("./docs/report.pdf"),
+ toFormat: "markdown",
 });
 ```
 
-- Mistake: treating `type: "txt"` as a bypass. The library still converts input to AsciiDoc first, then renders to plain text.
+- Mistake: treating `toFormat: "txt"` as a bypass. The library still converts input to AsciiDoc first, then renders to plain text.
 
 ```typescript
 const outputContentWithPlainText = await convert({
- input: "./notes.md",
- type: "text",
+ inputFilePath: "./notes.md",
+ toFormat: "text",
 });
 ```
 
@@ -47,7 +47,7 @@ const outputContentWithPlainText = await convert({
 
 ```typescript
 const asAsciiDoc = await convert({
- input: "./guide.rst",
- type: "adoc",
+ inputFilePath: "./guide.rst",
+ toFormat: "adoc",
 });
 ```

@@ -2,6 +2,7 @@ import { spawnSync } from "node:child_process";
 import { existsSync } from "node:fs";
 import fs from "node:fs/promises";
 import * as path from "node:path";
+import { fileURLToPath } from "node:url";
 
 import { convert as convertAdoc } from "@asciidoctor/core";
 import pandocPath from "pandoc-binary";
@@ -205,45 +206,132 @@ async function getAdocContent(inputFile: string, ext: string): Promise<string> {
 	return convertNativeFallback(inputFile, ext);
 }
 
-export interface ConvertOptions {
-	/**
-	 * @name input
-	 * @description Source file path
-	 * @type string
-	 */
-	input: string;
-	/**
-	 * @name type
-	 * @description Pipe to type: AsciiDoc -> Markdown, AsciiDoc -> plain text
-	 * @type string
-	 */
-	type?: string | "markdown" | "md" | "text" | "txt";
+function normalizeFormat(format?: string): string | undefined {
+	if (!format) {
+		return undefined;
+	}
+	return format.replace(/^\./, "").toLowerCase();
 }
 
-export async function convert(options: ConvertOptions): Promise<string> {
-	const {
-		input,
-		type = "adoc", // defaults to
-	} = options;
-	const resolvedInput = path.resolve(process.cwd(), input);
-	if (!existsSync(resolvedInput)) {
-		throw new Error(`File not found "${resolvedInput}"`);
+function resolveInputSource(options: ConvertOptions): {
+	kind: "file" | "inputString" | "inputBuffer";
+	filePath?: string;
+	content?: string | Buffer;
+	format?: string;
+} {
+	const sources = [
+		["inputFilePath", options.inputFilePath],
+		["inputString", options.inputString],
+		["inputBuffer", options.inputBuffer],
+	].filter(([, filterValue]) => filterValue !== undefined);
+
+	if (sources.length !== 1) {
+		throw new Error(
+			`Exactly one input source must be provided: inputFilePath, inputString, or inputBuffer. Received ${sources.length}.`,
+		);
 	}
 
-	const ext = path.extname(resolvedInput).toLowerCase();
-	let result = await getAdocContent(resolvedInput, ext);
+	const [sourceName, value] = sources[0];
 
+	if (sourceName === "inputFilePath") {
+		if (typeof value === "string") {
+			return {
+				kind: "file",
+				filePath: path.resolve(process.cwd(), value),
+				format: normalizeFormat(options.fromFormat ?? path.extname(value).replace(/^\./, "")),
+			};
+		}
+
+		if (value instanceof URL) {
+			return {
+				kind: "file",
+				filePath: fileURLToPath(value),
+				format: normalizeFormat(options.fromFormat ?? path.extname(fileURLToPath(value)).replace(/^\./, "")),
+			};
+		}
+
+		if (Buffer.isBuffer(value)) {
+			return {
+				kind: "inputBuffer",
+				content: value,
+				format: normalizeFormat(options.fromFormat),
+			};
+		}
+
+		throw new Error(`Unsupported input source type: ${typeof value}`);
+	}
+
+	if (sourceName === "inputString") {
+		if (typeof value !== "string") {
+			throw new Error("inputString input must be a string value.");
+		}
+
+		return {
+			kind: "inputString",
+			content: value,
+			format: normalizeFormat(options.fromFormat) ?? "markdown",
+		};
+	}
+
+	const bufferValue = Buffer.isBuffer(value) ? value : Buffer.from(value as Uint8Array);
+	return {
+		kind: "inputBuffer",
+		content: bufferValue,
+		format: normalizeFormat(options.fromFormat),
+	};
+}
+
+export interface ConvertOptions {
+	/**
+	 * @name inputFilePath
+	 * @description Source file path, file URL, or buffer representation.
+	 * @type {string|Buffer|URL}
+	 */
+	inputFilePath?: string | Buffer | URL;
+
+	/**
+	 * @name inputString
+	 * @description Raw text content to convert directly.
+	 * @type {string}
+	 */
+	inputString?: string;
+
+	/**
+	 * @name inputBuffer
+	 * @description Binary buffer or Uint8Array payload for direct conversion.
+	 * @type {Buffer|Uint8Array}
+	 */
+	inputBuffer?: Buffer | Uint8Array;
+
+	/**
+	 * @name fromFormat
+	 * @description Explicit input format hint when auto-detection is not possible.
+	 * @type {string}
+	 */
+	fromFormat?: string;
+
+	/**
+	 * @name toFormat
+	 * @description AsciiDoc output conversion target: adoc, markdown, or text.
+	 * @type {string|"markdown"|"md"|"text"|"txt"}
+	 */
+	toFormat?: string | "markdown" | "md" | "text" | "txt";
+}
+
+async function convertAsciiDocOutput(result: string, type: string | undefined): Promise<string> {
 	// PIPELINE: adoc -> markdown / text
 	if (type === "md" || type === "markdown") {
 		const html = await convertAdoc(result, { attributes: { doctype: "book" }, standalone: false });
 		const turndownService = new TurndownService({ headingStyle: "atx" });
 		turndownService.use(gfm);
-		result = turndownService.turndown(typeof html === "string" ? html : String(html ?? ""));
-	} else if (type === "txt" || type === "text") {
+		return turndownService.turndown(typeof html === "string" ? html : String(html ?? ""));
+	}
+
+	if (type === "txt" || type === "text") {
 		const html = await convertAdoc(result, { attributes: { doctype: "book" }, standalone: false });
 		const htmlStr = typeof html === "string" ? html : String(html ?? "");
 		// Simple HTML to text conversion
-		result = htmlStr
+		return htmlStr
 			.replace(/<style[^>]*>[\s\S]*?<\/style>/gi, "")
 			.replace(/<script[^>]*>[\s\S]*?<\/script>/gi, "")
 			.replace(/\r?\n/g, " ")
@@ -269,4 +357,106 @@ export async function convert(options: ConvertOptions): Promise<string> {
 	}
 
 	return result;
+}
+
+async function convertInlinePayload(content: string | Buffer, format: string): Promise<string> {
+	const normalizedFormat = normalizeFormat(format) ?? "text";
+	const hasPandoc = isPandocAvailable();
+	const pandocFormat = (PANDOC_PRIMARY_FORMATS as Record<string, string>)[`.${normalizedFormat}`] ?? normalizedFormat;
+
+	if (hasPandoc && pandocFormat) {
+		const result = spawnSync(pandocPath, ["-f", pandocFormat, "-t", "asciidoc"], {
+			input: content,
+			encoding: "utf-8",
+		});
+		if (result.status === 0) {
+			return result.stdout;
+		}
+	}
+
+	const text = typeof content === "string" ? content : content.toString("utf-8");
+
+	switch (normalizedFormat) {
+		case "csv":
+			return convertCsvToAdoc(text, ",");
+		case "tsv":
+			return convertCsvToAdoc(text, "\t");
+		case "html":
+		case "htm":
+			return convertHtmlToAdoc(text);
+		case "json":
+			return convertStructuredDataToAdoc(text, "json");
+		case "yaml":
+		case "yml":
+			return convertStructuredDataToAdoc(text, "yaml");
+		case "toml":
+			return convertStructuredDataToAdoc(text, "toml");
+		case "xml":
+			return convertStructuredDataToAdoc(text, "xml");
+		case "markdown":
+		case "md":
+		case "mdx":
+		case "mdc":
+			return mdToAdoc(text);
+		case "pdf":
+			return convertPdfToAdoc(Buffer.isBuffer(content) ? content : Buffer.from(text, "utf-8"));
+		case "apng":
+		case "bmp":
+		case "gif":
+		case "jpeg":
+		case "jpg":
+		case "pbm":
+		case "png":
+		case "tif":
+		case "tiff":
+		case "webp":
+			return convertImageToAdoc(Buffer.isBuffer(content) ? content : Buffer.from(text, "utf-8"));
+		case "doc":
+			return convertDocToAdoc(Buffer.isBuffer(content) ? content : Buffer.from(text, "utf-8"));
+		case "docx":
+			return convertDocxToAdoc(Buffer.isBuffer(content) ? content : Buffer.from(text, "utf-8"));
+		case "xlsx":
+		case "ods":
+			return convertSpreadsheetToAdoc(Buffer.isBuffer(content) ? content : Buffer.from(text, "utf-8"));
+		case "odf":
+		case "odt":
+			return convertOdtToAdoc(Buffer.isBuffer(content) ? content : Buffer.from(text, "utf-8").toString());
+		case "rtf":
+			return convertRtfToAdoc(Buffer.isBuffer(content) ? content : Buffer.from(text, "utf-8").toString());
+		default:
+			return text;
+	}
+}
+
+export async function convert(options: ConvertOptions): Promise<string> {
+	const legacyOptions = options as ConvertOptions & {
+		input?: string | Buffer | URL;
+		type?: string;
+	};
+	const inputFilePath = options.inputFilePath ?? legacyOptions.input;
+	const inputBuffer = options.inputBuffer;
+	const toFormat = options.toFormat ?? legacyOptions.type ?? "adoc";
+	const normalizedOptions: ConvertOptions = {
+		...options,
+		inputFilePath,
+		inputBuffer,
+		toFormat,
+	};
+	const resolvedSource = resolveInputSource(normalizedOptions);
+
+	if (resolvedSource.kind === "file") {
+		const inputFile = resolvedSource.filePath;
+		if (!inputFile || !existsSync(inputFile)) {
+			throw new Error(`File not found "${inputFile ?? ""}"`);
+		}
+
+		const ext = path.extname(inputFile).toLowerCase();
+		const result = await getAdocContent(inputFile, ext);
+		return convertAsciiDocOutput(result, toFormat);
+	}
+
+	const content = resolvedSource.content ?? "";
+	const format = resolvedSource.format ?? "text";
+	const result = await convertInlinePayload(content, format);
+	return convertAsciiDocOutput(result, toFormat);
 }

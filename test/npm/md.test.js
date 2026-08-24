@@ -23,6 +23,27 @@ describe("NPM: Markdown to AsciiDoc", () => {
 		assert.ok(content.includes("_Italic_"), "Missing italic");
 	});
 
+	test("should convert raw markdown strings directly", async () => {
+		const content = await convert({ inputString: "# Title\n\n**Bold** text", fromFormat: "md" });
+
+		assert.ok(content.includes("= Title"), "Missing level 1 header from inputString input");
+		assert.ok(content.includes("*Bold*"), "Missing bold from inputString input");
+	});
+
+	test("should convert typed buffers directly", async () => {
+		const inputBuffer = Buffer.from("# Title\n\n- item one\n- item two");
+		const content = await convert({ inputBuffer, fromFormat: "md" });
+
+		assert.ok(content.includes("= Title"), "Missing level 1 header from inputBuffer input");
+		assert.ok(content.includes("item one"), "Missing list item from inputBuffer input");
+	});
+
+	test("should reject multiple input sources", async () => {
+		await assert.rejects(async () => {
+			await convert({ inputFilePath: "./README.md", inputString: "# Title" });
+		}, /Exactly one input source/);
+	});
+
 	test("should convert Markdown via the public convert API", async () => {
 		const mdContent = "# Title\n\n## Section\n\n**Bold** and *Italic*";
 		const tempFile = writeTempFile(".md", mdContent);

@@ -24,20 +24,48 @@ Designed as a single-command ingestion engine for technical documentation, local
 
 When choosing a markup format for technical writing, LLM RAG pipelines, or general documentation, **AsciiDoc**, **Markdown**, and **Plain Text** sit at distinct points along the spectrum of complexity versus functionality.
 
-- Use **AsciiDoc** when building **structured**, technical documentation or LLM ingestion pipelines where explicit **semantic metadata** are **critical**.
-- Use **Markdown** for lightweight, **human-facing** docs where **universal rendering** matters most.
-- Use **Plain Text** only when structural context is **completely unnecessary**.
+- Level 2️⃣ details. Use **AsciiDoc** when building **structured**, technical documentation or LLM ingestion pipelines where explicit **semantic metadata** are **critical**.
+- Level 1️⃣ overview. Use **Markdown** for lightweight, **human-facing** docs where **universal rendering** matters most.
+- Level 0️⃣ abstract. Use **Plain Text** only when structural context is **completely unnecessary**.
 
 ### Node.js Usage
+
+AsciiDoc are plain text, making it ideal for standard SQL `TEXT` columns and clean `git diff` tracking.
 
 ```javascript
 import { convert } from 'doc-to-adoc';
 
 const content = await convert({
-  input: './my.docx',
-  type: 'adoc' // Options: 'adoc' | 'md' | 'txt'
+	inputFilePath: './my.docx',
+	toFormat: 'adoc', // Options: 'adoc' | 'md' | 'txt'
 });
 console.log(content);
+```
+
+Strip HTML tags to extract clean text content.
+
+```javascript
+import { convert } from 'doc-to-adoc';
+
+const innerHtml = await convert({
+	inputFilePath: "./index.html",
+	fromFormat: "html",
+	toFormat: "text",
+});
+console.log(innerHtml);
+```
+
+Convert HTML into Markdown digestible by LLMs.
+
+```javascript
+import { convert } from 'doc-to-adoc';
+
+const markdown = await convert({
+	inputString: `<b>Bold</b>`,
+	fromFormat: 'html',
+	toFormat: 'markdown',
+});
+console.log(markdown); // **Bold**
 ```
 
 ### CLI Usage
@@ -51,17 +79,17 @@ doc-to-adoc ./my.docx ./my.adoc
 
 ### Output Types
 
-Support for different output formats via `-type` (or `--type`, `-t`):
+Support for different output formats via `-t` / `--type`:
 - `adoc`, `asciidoc` (default): Standard AsciiDoc output.
 - `md`, `markdown`: Converts through the pipeline `input -> asciidoc -> markdown`.
 - `txt`, `text`: Converts through the pipeline `input -> asciidoc -> plain text`.
 
 ```bash
 # Convert PDF to Markdown
-doc-to-adoc -input ./report.pdf -type markdown
+doc-to-adoc -i ./report.pdf -t markdown
 
 # Convert Excel to Plain Text
-doc-to-adoc ./data.xlsx ./output.txt -type text
+doc-to-adoc ./data.xlsx ./output.txt -t text
 ```
 
 ## 🚀 Local Execution

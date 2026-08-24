@@ -78,8 +78,8 @@ Options:
 
 	try {
 		const result = await convert({
-			input: inputFile,
-			type: outputType as "adoc" | "md" | "txt",
+			inputFilePath: inputFile,
+			toFormat: outputType as "adoc" | "md" | "txt",
 		});
 
 		if (outputFile) {
