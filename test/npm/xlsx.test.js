@@ -20,7 +20,7 @@ describe("NPM: XLSX to AsciiDoc & Table Extraction", () => {
 		ws.addRow(["Bob", 25, "Los Angeles"]);
 		const filePath = await writeWorkbookToTempFile(wb);
 
-		const result = await convert({ input: filePath });
+		const result = await convert({ inputFilePath: filePath });
 
 		assert.ok(result.includes('[options="header"]'), "Missing table header option");
 		assert.ok(result.includes("| Name | Age | City"), "Missing header row");
@@ -36,7 +36,7 @@ describe("NPM: XLSX to AsciiDoc & Table Extraction", () => {
 		ws.mergeCells("A1:B1");
 		const filePath = await writeWorkbookToTempFile(wb);
 
-		const adoc = await convert({ input: filePath });
+		const adoc = await convert({ inputFilePath: filePath });
 		assert.ok(adoc.includes("2+| Full Name | Age"), "AsciiDoc should have 2+| colspan prefix");
 	});
 
@@ -47,7 +47,7 @@ describe("NPM: XLSX to AsciiDoc & Table Extraction", () => {
 		ws.addRow(["Widget", 10, 100]);
 		const filePath = await writeWorkbookToTempFile(wb);
 
-		const md = await convert({ input: filePath, type: "markdown" });
+		const md = await convert({ inputFilePath: filePath, toFormat: "markdown" });
 		assert.ok(md.includes("| Product | Qty | Price |"), "Worksheet markdown should contain headers");
 	});
 });

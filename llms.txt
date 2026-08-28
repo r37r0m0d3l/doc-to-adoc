@@ -16,7 +16,7 @@ console.log(outputContentWithAdoc);
 ## Core API Overview
 
 - `convert(options)` — Converts an input file to AsciiDoc and can pipe the result to Markdown or plain text via the AsciiDoc render step; defined in `src/converter.ts`.
-- `ConvertOptions` — Public input contract for `convert`, requiring `inputFilePath` and optionally `toFormat`; defined in `src/converter.ts`.
+- `ConvertOptions` — Public input contract for `convert`, requiring exactly one input source (`inputFilePath`, `inputString`, or `inputBuffer`) and optionally `toFormat`; defined in `src/converter.ts`.
 - `src/index.ts` — Public package entrypoint that re-exports `convert`, `ConvertOptions` for ESM consumers.
 - `bin/cli.js` / `src/cli.ts` — CLI wrapper that accepts `-i/--input`, `-o/--output`, `-t/--type`, `-f/--force`, `-v/--version`, and `-h/--help`.
 - Format adapters — Native converters handle PDF, DOC/DOCX, CSV/TSV, XLS/XLSX/ODS, HTML, JSON/YAML/TOML/XML, Markdown, ODT, and RTF, with Pandoc selected when available for additional formats.

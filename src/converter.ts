@@ -110,6 +110,10 @@ const PANDOC_PRIMARY_FORMATS = {
 	[EXTENSIONS_SUPPORTED.WIKI]: "mediawiki",
 } as const;
 
+export type FormatsType = "adoc" | "asciidoc" | "markdown" | "md" | "text" | "txt";
+
+const FORMATS_TO_OUTPUT: Set<FormatsType> = new Set(["adoc", "asciidoc", "markdown", "md", "text", "txt"]);
+
 // ---------------------------------------------------------------------------
 // Master Dispatcher
 // ---------------------------------------------------------------------------
@@ -214,7 +218,7 @@ function normalizeFormat(format?: string): string | undefined {
 }
 
 function resolveInputSource(options: ConvertOptions): {
-	kind: "file" | "inputString" | "inputBuffer";
+	kind: "inputFilePath" | "inputString" | "inputBuffer";
 	filePath?: string;
 	content?: string | Buffer;
 	format?: string;
@@ -227,7 +231,7 @@ function resolveInputSource(options: ConvertOptions): {
 
 	if (sources.length !== 1) {
 		throw new Error(
-			`Exactly one input source must be provided: inputFilePath, inputString, or inputBuffer. Received ${sources.length}.`,
+			`Exactly one input source must be provided: inputFilePath, inputString, or inputBuffer. Received [${sources.length}].`,
 		);
 	}
 
@@ -236,25 +240,37 @@ function resolveInputSource(options: ConvertOptions): {
 	if (sourceName === "inputFilePath") {
 		if (typeof value === "string") {
 			return {
-				kind: "file",
+				kind: "inputFilePath",
 				filePath: path.resolve(process.cwd(), value),
 				format: normalizeFormat(options.fromFormat ?? path.extname(value).replace(/^\./, "")),
 			};
 		}
 
 		if (value instanceof URL) {
+			if (value.protocol !== "file:") {
+				throw new Error(`inputFilePath URL must use the file: protocol. Received "${value.protocol}".`);
+			}
+			const filePath = fileURLToPath(value);
+			const format = normalizeFormat(options.fromFormat ?? path.extname(filePath).replace(/^\./, ""));
+			if (!format) {
+				throw new Error("fromFormat is required when using a Buffer inputFilePath.");
+			}
 			return {
-				kind: "file",
-				filePath: fileURLToPath(value),
-				format: normalizeFormat(options.fromFormat ?? path.extname(fileURLToPath(value)).replace(/^\./, "")),
+				kind: "inputFilePath",
+				filePath,
+				format,
 			};
 		}
 
 		if (Buffer.isBuffer(value)) {
+			const format = normalizeFormat(options.fromFormat);
+			if (!format) {
+				throw new Error("fromFormat is required when using a Buffer inputFilePath.");
+			}
 			return {
 				kind: "inputBuffer",
 				content: value,
-				format: normalizeFormat(options.fromFormat),
+				format,
 			};
 		}
 
@@ -313,9 +329,9 @@ export interface ConvertOptions {
 	/**
 	 * @name toFormat
 	 * @description AsciiDoc output conversion target: adoc, markdown, or text.
-	 * @type {string|"markdown"|"md"|"text"|"txt"}
+	 * @type {"adoc" | "asciidoc" | "markdown" | "md" | "text" | "txt"}
 	 */
-	toFormat?: string | "markdown" | "md" | "text" | "txt";
+	toFormat?: FormatsType;
 }
 
 async function convertAsciiDocOutput(result: string, type: string | undefined): Promise<string> {
@@ -429,22 +445,29 @@ async function convertInlinePayload(content: string | Buffer, format: string): P
 }
 
 export async function convert(options: ConvertOptions): Promise<string> {
-	const legacyOptions = options as ConvertOptions & {
-		input?: string | Buffer | URL;
-		type?: string;
-	};
-	const inputFilePath = options.inputFilePath ?? legacyOptions.input;
+	const inputFilePath = options.inputFilePath;
 	const inputBuffer = options.inputBuffer;
-	const toFormat = options.toFormat ?? legacyOptions.type ?? "adoc";
+	const inputString = options.inputString;
+	let toFormat = options.toFormat;
+	const fromFormat = options.fromFormat;
 	const normalizedOptions: ConvertOptions = {
-		...options,
-		inputFilePath,
+		fromFormat,
 		inputBuffer,
+		inputFilePath,
+		inputString,
 		toFormat,
 	};
+
+	if (toFormat === undefined) {
+		toFormat = "adoc";
+	}
+	if (!FORMATS_TO_OUTPUT.has(toFormat)) {
+		throw new Error(`Unknown output format: [${toFormat}]`);
+	}
+
 	const resolvedSource = resolveInputSource(normalizedOptions);
 
-	if (resolvedSource.kind === "file") {
+	if (resolvedSource.kind === "inputFilePath") {
 		const inputFile = resolvedSource.filePath;
 		if (!inputFile || !existsSync(inputFile)) {
 			throw new Error(`File not found "${inputFile ?? ""}"`);

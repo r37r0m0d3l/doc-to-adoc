@@ -15,7 +15,7 @@ describe("NPM: Markdown to AsciiDoc", () => {
 	test("should convert Markdown string to AsciiDoc", async () => {
 		const mdContent = "# Title\n\n## Section\n\n**Bold** and *Italic*";
 		const tempFile = writeTempFile(".md", mdContent);
-		const content = await convert({ input: tempFile });
+		const content = await convert({ inputFilePath: tempFile });
 
 		assert.ok(content.includes("= Title"), "Missing level 1 header");
 		assert.ok(content.includes("== Section"), "Missing level 2 header");
@@ -44,10 +44,16 @@ describe("NPM: Markdown to AsciiDoc", () => {
 		}, /Exactly one input source/);
 	});
 
+	test("should reject unknown toFormat values", async () => {
+		await assert.rejects(async () => {
+			await convert({ inputString: "# Title", fromFormat: "md", toFormat: "pdf" });
+		}, /Unknown output format/);
+	});
+
 	test("should convert Markdown via the public convert API", async () => {
 		const mdContent = "# Title\n\n## Section\n\n**Bold** and *Italic*";
 		const tempFile = writeTempFile(".md", mdContent);
-		const content = await convert({ input: tempFile });
+		const content = await convert({ inputFilePath: tempFile });
 
 		assert.ok(content.includes("= Title"), "Missing level 1 header");
 		assert.ok(content.includes("== Section"), "Missing level 2 header");
@@ -56,7 +62,7 @@ describe("NPM: Markdown to AsciiDoc", () => {
 	test("should protect code blocks during conversion", async () => {
 		const mdContent = "```javascript\nconst x = 1;\n```";
 		const tempFile = writeTempFile(".md", mdContent);
-		const content = await convert({ input: tempFile });
+		const content = await convert({ inputFilePath: tempFile });
 
 		assert.ok(content.includes("[source,javascript]"), "Missing source block header");
 		assert.ok(content.includes("----"), "Missing delimiters");

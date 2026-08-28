@@ -22,7 +22,7 @@ describe("NPM: HTML to AsciiDoc", () => {
         </ul>
     `;
 		const tempFile = writeTempFile(".html", htmlContent);
-		const result = await convert({ input: tempFile });
+		const result = await convert({ inputFilePath: tempFile });
 
 		assert.ok(result.includes("= Main Title"), "Missing main title");
 		assert.ok(result.includes("*bold*"), "Missing bold text");

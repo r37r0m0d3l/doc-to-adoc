@@ -22,7 +22,7 @@ describe("NPM: JSON to AsciiDoc", () => {
 			},
 		});
 		const tempFile = writeTempFile(".json", jsonContent);
-		const result = await convert({ input: tempFile });
+		const result = await convert({ inputFilePath: tempFile });
 
 		assert.ok(result.includes("* *name:* Alice"), "Missing name");
 		assert.ok(result.includes("* *age:* 30"), "Missing age");

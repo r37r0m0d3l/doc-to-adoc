@@ -25,7 +25,7 @@ Some paragraph text.
 		const tempFile = path.resolve(process.cwd(), "test/docs/temp_table.adoc");
 		fs.writeFileSync(tempFile, tableAdoc);
 
-		const text = await convert({ input: tempFile, type: "txt" });
+		const text = await convert({ inputFilePath: tempFile, toFormat: "txt" });
 		fs.unlinkSync(tempFile);
 
 		assert.ok(text.includes("Header 1 | Header 2"), "Missing table headers in text");

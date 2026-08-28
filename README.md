@@ -30,14 +30,14 @@ When choosing a markup format for technical writing, LLM RAG pipelines, or gener
 
 ### Node.js Usage
 
-AsciiDoc are plain text, making it ideal for standard SQL `TEXT` columns and clean `git diff` tracking.
+AsciiDoc is plain text, making it ideal for standard SQL `TEXT` columns and clean `git diff` tracking.
 
 ```javascript
 import { convert } from 'doc-to-adoc';
 
 const content = await convert({
 	inputFilePath: './my.docx',
-	toFormat: 'adoc', // Options: 'adoc' | 'md' | 'txt'
+	toFormat: 'adoc', // Options: 'adoc' | 'asciidoc' | 'markdown' | 'md' | 'text' | 'txt'
 });
 console.log(content);
 ```

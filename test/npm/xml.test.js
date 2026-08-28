@@ -20,7 +20,7 @@ describe("NPM: XML to AsciiDoc", () => {
 </user>
     `.trim();
 		const tempFile = writeTempFile(".xml", xmlContent);
-		const result = await convert({ input: tempFile });
+		const result = await convert({ inputFilePath: tempFile });
 
 		assert.ok(result.includes("* *user:*"), "Missing user header");
 		assert.ok(result.includes("** *@_id:* 123"), "Missing attribute id");

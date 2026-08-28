@@ -5,7 +5,7 @@ import { convert } from "../../dist/index.js";
 describe("NPM: DOCX to AsciiDoc", () => {
 	test("should convert DOCX file to AsciiDoc", async () => {
 		const docxPath = "test/docs/sample.docx";
-		const content = await convert({ input: docxPath });
+		const content = await convert({ inputFilePath: docxPath });
 
 		assert.ok(content.includes("Document Metadata & Attributes"), "Missing section header 1");
 		assert.ok(content.includes("Text Formatting & Inline Elements"), "Missing section header 2");
@@ -15,7 +15,7 @@ describe("NPM: DOCX to AsciiDoc", () => {
 
 	test("should convert DOCX file to Markdown via the public API", async () => {
 		const docxPath = "test/docs/sample.docx";
-		const markdown = await convert({ input: docxPath, type: "markdown" });
+		const markdown = await convert({ inputFilePath: docxPath, toFormat: "markdown" });
 		assert.ok(markdown.includes("Document Metadata & Attributes"), "Missing markdown header");
 	});
 });

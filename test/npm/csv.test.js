@@ -15,7 +15,7 @@ describe("NPM: CSV to AsciiDoc", () => {
 	test("should convert basic CSV to AsciiDoc table", async () => {
 		const csvContent = "name,age,city\nAlice,30,New York\nBob,25,Los Angeles";
 		const tempFile = writeTempFile(".csv", csvContent);
-		const result = await convert({ input: tempFile });
+		const result = await convert({ inputFilePath: tempFile });
 
 		assert.ok(result.includes('[options="header"]'), "Missing table header option");
 		assert.ok(result.includes("| name | age | city"), "Missing CSV header row");
@@ -26,7 +26,7 @@ describe("NPM: CSV to AsciiDoc", () => {
 	test("should escape pipe characters in CSV content", async () => {
 		const csvContent = 'name,description\nItem 1,"Description with | pipe"';
 		const tempFile = writeTempFile(".csv", csvContent);
-		const result = await convert({ input: tempFile });
+		const result = await convert({ inputFilePath: tempFile });
 
 		assert.ok(result.includes("Description with \\| pipe"), "Missing escaped pipe");
 		assert.ok(result.includes("| Item 1 | Description with \\| pipe"), "Missing escaped pipe row");

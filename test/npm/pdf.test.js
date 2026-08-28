@@ -5,7 +5,7 @@ import { convert } from "../../dist/index.js";
 describe("NPM: PDF to AsciiDoc", () => {
 	test("should convert PDF file to AsciiDoc via the public API", async () => {
 		const pdfPath = "test/docs/sample.pdf";
-		const content = await convert({ input: pdfPath });
+		const content = await convert({ inputFilePath: pdfPath });
 
 		assert.ok(content.includes("= Sample PDF"), "Missing title");
 		assert.ok(content.includes("Created for testing PDFObject"), "Missing content text");

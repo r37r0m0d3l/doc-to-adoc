@@ -25,7 +25,7 @@ Public library configuration is defined by the exported interface `ConvertOption
 - `inputString?: string` — direct string content input.
 - `inputBuffer?: Buffer | Uint8Array` — direct binary input.
 - `fromFormat?: string` — explicit input format hint.
-- `toFormat?: string | "markdown" | "md" | "text" | "txt"` — optional output mode; default is `"adoc"`.
+- `toFormat?: "adoc" | "asciidoc" | "markdown" | "md" | "text" | "txt"` — optional output mode; default is `"adoc"`.
 
 CLI configuration in `src/cli.ts`:
 - `-i, --input <file>`
@@ -86,7 +86,7 @@ export interface ConvertOptions {
   inputString?: string;
   inputBuffer?: Buffer | Uint8Array;
   fromFormat?: string;
-  toFormat?: string | "markdown" | "md" | "text" | "txt";
+  toFormat?: "adoc" | "asciidoc" | "markdown" | "md" | "text" | "txt";
 }
 ```
 
@@ -153,7 +153,7 @@ export interface ConvertOptions {
  inputString?: string;
  inputBuffer?: Buffer | Uint8Array;
  fromFormat?: string;
- toFormat?: string | "markdown" | "md" | "text" | "txt";
+ toFormat?: "adoc" | "asciidoc" | "markdown" | "md" | "text" | "txt";
 }
 ```
 

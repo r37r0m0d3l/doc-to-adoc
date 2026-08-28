@@ -79,7 +79,7 @@ Options:
 	try {
 		const result = await convert({
 			inputFilePath: inputFile,
-			toFormat: outputType as "adoc" | "md" | "txt",
+			toFormat: outputType as "adoc" | "asciidoc" | "md" | "markdown" | "txt" | "text",
 		});
 
 		if (outputFile) {

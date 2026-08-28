@@ -15,7 +15,7 @@ describe("NPM: TSV to AsciiDoc", () => {
 	test("should convert TSV to AsciiDoc table", async () => {
 		const tsvContent = "name\tage\tcity\nAlice\t30\tNew York\nBob\t25\tLos Angeles";
 		const tempFile = writeTempFile(".tsv", tsvContent);
-		const result = await convert({ input: tempFile });
+		const result = await convert({ inputFilePath: tempFile });
 
 		assert.ok(result.includes('[options="header"]'), "Missing table header option");
 		assert.ok(result.includes("| name | age | city"), "Missing TSV header row");
